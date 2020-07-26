@@ -221,6 +221,11 @@ const Profile: React.FC<IProps> = ({
     } else {
       // history.push('/home')
     }
+    return () => {
+      if (showSnackBar) {
+        toggleSnackBarConnect()
+      }
+    }
   }, [])
 
   const handleBackClick = () => history.goBack()
