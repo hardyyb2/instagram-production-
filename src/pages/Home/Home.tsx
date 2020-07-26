@@ -118,6 +118,7 @@ const Home: React.FC<HomeProps> = ({
             className={classes.camera}
             color='inherit'
             aria-label='camera'
+            disabled
           >
             <CameraAltIcon fontSize='large' />
           </IconButton>
@@ -128,6 +129,7 @@ const Home: React.FC<HomeProps> = ({
             className={classes.message}
             color='inherit'
             aria-label='message'
+            disabled
           >
             <TelegramIcon fontSize='large' />
           </IconButton>

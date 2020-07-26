@@ -66,6 +66,7 @@ const App: React.FC<IProps> = ({
             component={EditProfile}
             isAuthenticated={isAuthenticated}
             isVerifying={isVerifying}
+            noNavigation
           />
           <ProtectedRoute
             exact
@@ -88,6 +89,7 @@ const App: React.FC<IProps> = ({
             component={Post}
             isAuthenticated={isAuthenticated}
             isVerifying={isVerifying}
+            noNavigation
           />
           <PublicRoute path='/login' exact={true} component={Login} />
           <PublicRoute path='/signup' exact={true} component={Signup} />

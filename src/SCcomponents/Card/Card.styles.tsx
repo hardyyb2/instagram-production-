@@ -25,9 +25,9 @@ export const CardHeader = styled(Grid)`
   padding-bottom: 0px;
 `
 
-export const HeaderImageContainer = styled.div`
-  width: 50px;
-  height: 50px;
+export const HeaderImageContainer = styled.div<{ size?: string }>`
+  width: ${({ size }) => (size ? size : '50px')};
+  height: ${({ size }) => (size ? size : '50px')};
   border-radius: 50%;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   overflow: hidden;
