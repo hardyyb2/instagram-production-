@@ -4,8 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-###Live Site  
-[http://exogram.herokuapp.com](exogram.herokuapp.com)
+##Live Site  
+[exogram](http://exogram.herokuapp.com)
 
 __Not Resposive on Desktops yet (only on Mobile screens)__  
 __under development__
