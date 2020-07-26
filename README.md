@@ -5,10 +5,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 In the project directory, you can run:
 
 ###Live Site  
-[exogram.herokuapp.com](exogram.herokuapp.com)
+[http://exogram.herokuapp.com](exogram.herokuapp.com)
 
-__Not Resposive on Desktops yet (only on Mobile screens)__
-__under devlopment__
+__Not Resposive on Desktops yet (only on Mobile screens)__  
+__under development__
 
 
 ### `yarn start`
