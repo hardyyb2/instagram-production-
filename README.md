@@ -4,6 +4,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+###Live Site
+[ecogram.herokuapp.com](exogram.herokuapp.com)
+
+__Not Resposive on Desktops yet (only on Mobile screens)__
+__under devlopment__
+
+
 ### `yarn start`
 
 Runs the app in the development mode.<br />
