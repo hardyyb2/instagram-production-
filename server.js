@@ -23,7 +23,7 @@ const API_ROUTE = `/api/${process.env.API_VERSION}`
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-if (process.env === 'development') {
+if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'build')))
 }
 
@@ -36,7 +36,7 @@ connectDB()
 app.use(`${API_ROUTE}/auth`, authRouter)
 app.use(`${API_ROUTE}/user`, authenticateToken, userRouter)
 app.use(`${API_ROUTE}/post`, authenticateToken, postRouter)
-if (process.env === 'development') {
+if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build/index.html'))
   })

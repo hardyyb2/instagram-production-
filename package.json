@@ -54,6 +54,8 @@
   },
   "scripts": {
     "dev": "concurrently \"yarn dev:server\" \"yarn dev:client\"",
+    "dev:local": "yarn build && yarn start",
+    "dev:prod": "set NODE_ENV=production && yarn dev",
     "dev:server": "nodemon server.js",
     "dev:client": "react-scripts start",
     "startlocalbuild": "react-scripts build && node server.js",
