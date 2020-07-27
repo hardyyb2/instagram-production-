@@ -67,7 +67,7 @@ const Signup: React.FC<SignupProps> = ({
       <Grid container justify='center' className={classes.root}>
         <Grid container item xs={10} sm={4}>
           <Grid xs={12} sm={12} item className={classes.appbar}>
-            Insta Clone
+            Exogram
           </Grid>
           <Grid item className={classes.subHeader}>
             Sign up to see photos and videos from your friends.

@@ -6,9 +6,9 @@ export const Input = styled.input`
   display: none;
 `
 export const Label = styled.label``
-export const AvatarPreview = styled.div`
-  width: 192px;
-  height: 192px;
+export const AvatarPreview = styled.div<{ size?: string }>`
+  width: ${({ size }) => (size ? size : '192px')};
+  height: ${({ size }) => (size ? size : '192px')};
   position: relative;
   border-radius: 25px;
   border: 6px solid #f8f8f8;
@@ -28,7 +28,6 @@ export const ImagePreview = styled.div<{ image: string }>`
 
 export const AvatarUpload = styled.div`
   position: relative;
-  max-width: 205px;
   margin: 10px auto;
   ${AvatarEdit} {
     position: absolute;
@@ -45,7 +44,7 @@ export const AvatarUpload = styled.div`
       margin-bottom: 0;
       border-radius: 15px;
       background: #ffffff;
-      border: 1px solid ${theme.palette.secondary.dark};
+
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
       cursor: pointer;
       font-weight: normal;

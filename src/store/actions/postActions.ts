@@ -152,12 +152,24 @@ const success = (): successProps => {
 }
 
 export const addPost = (payload: addPostPayloadProps) => async (
-  dispatch: Dispatch<PostActions, {}, any>
+  dispatch: Dispatch<PostActions, {}, any>,
+  getState: () => IState
 ) => {
   dispatch(requestPost())
   try {
-    await apiClient().post(`/post`, objectToFormData(payload))
+    const response = await apiClient().post(`/post`, objectToFormData(payload))
+    let { data } = response.data
+    const { avatar, username, _id } = getState().user.user
+    //add user props to posted By
+    data.postedBy = { avatar, username, _id }
+    const otherPostData = Object.assign([], getState().post.otherPosts)
+    //add current post to otherposts
+    otherPostData.unshift(data)
+    if (!isEmpty(otherPostData)) dispatch(receivedPostFeed(otherPostData))
     dispatch(addedPost())
+    return new Promise((resolve, reject) => {
+      resolve({ success: true })
+    })
   } catch (err) {
     if (err.response === undefined) dispatch(postError('Something went wrong'))
     dispatch(postError(err.response.data.error))

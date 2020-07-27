@@ -13,10 +13,11 @@ import {
 
 interface IProps {
   image: string
+  size?: string
   handleImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const ProfileImage: React.FC<IProps> = ({ image, handleImageUpload }) => {
+const ProfileImage: React.FC<IProps> = ({ image, size, handleImageUpload }) => {
   return (
     <AvatarUpload>
       <AvatarEdit>
@@ -32,7 +33,7 @@ const ProfileImage: React.FC<IProps> = ({ image, handleImageUpload }) => {
           </Label>
         </IconButton>
       </AvatarEdit>
-      <AvatarPreview>
+      <AvatarPreview size={size}>
         <ImagePreview image={image} />
       </AvatarPreview>
     </AvatarUpload>

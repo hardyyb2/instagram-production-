@@ -58,7 +58,6 @@
     "dev:prod": "set NODE_ENV=production && yarn dev",
     "dev:server": "nodemon server.js",
     "dev:client": "react-scripts start",
-    "startlocalbuild": "react-scripts build && node server.js",
     "start": "node server.js",
     "build": "react-scripts build",
     "heroku-postbuild": "yarn  && yarn run build",

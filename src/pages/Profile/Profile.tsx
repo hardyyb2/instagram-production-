@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'column',
+    height: '100%',
   },
   appBar: {
     display: 'flex',

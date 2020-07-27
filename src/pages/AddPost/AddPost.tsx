@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Formik, Form } from 'formik'
+import { useHistory } from 'react-router-dom'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
+import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-
 import {
   Grid,
   AppBar,
@@ -15,59 +15,60 @@ import {
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import CheckIcon from '@material-ui/icons/Check'
 
+import {
+  PostActions,
+  addPost,
+  addPostPayloadProps,
+  clearError,
+  toggleSnackBar,
+} from '../../store/actions'
 import { IState } from '../../store/types'
 import {
-  UserActions,
-  updateUserObjProps,
-  updateUser,
-  UserProps,
-  toggleSnackBar,
-} from '../../store/actions/userActions'
+  checkIfFilesAreTooBig,
+  checkIfFilesAreCorrectType,
+} from '../../utils/helpers'
 import { useStyles } from '../Home/Home'
-import { SCConfirmModal, SCProfileImage } from '../../SCcomponents'
-import { clearError } from '../../store/actions'
-import { useHistory } from 'react-router-dom'
+import { SCProfileImage, SCConfirmModal } from '../../SCcomponents'
 
 interface IProps {
-  loading: boolean
-  userloading: boolean
-  user: UserProps
   error: string | null
-  updateUserConnect: (user: updateUserObjProps) => any
+  loading: boolean
+  addPostConnect: (payload: addPostPayloadProps) => any
   clearErrorConnect: () => void
   toggleSnackBarConnect: () => void
 }
 
-const editProfileSchema = Yup.object().shape({
-  username: Yup.string().required('Username is Required'),
-  about: Yup.string(),
+const addPostSchema = Yup.object().shape({
+  caption: Yup.string().required('caption is Required'),
+  image: Yup.mixed()
+    .required('An Image is required')
+    .test(
+      'is-correct-file',
+      'Only Images (jpeg/png) allowed',
+      checkIfFilesAreTooBig
+    )
+    .test('is-big-file', 'Image size too large', checkIfFilesAreCorrectType),
 })
 
 interface MyFormValues {
-  username: string
-  about: string
-  avatar: File
+  image: File
+  caption: string
 }
 
-const Home: React.FC<IProps> = ({
+const Post: React.FC<IProps> = ({
   error,
-  user,
   loading,
-  userloading,
-  updateUserConnect,
-  clearErrorConnect,
+  addPostConnect,
   toggleSnackBarConnect,
+  clearErrorConnect,
 }) => {
-  const classes = useStyles()
   const history = useHistory()
+  const classes = useStyles()
   const [image, setImage] = useState('')
 
-  const { avatar, username, about = '' } = user
-
   const initialValues: MyFormValues = {
-    username,
-    about,
-    avatar: new File([''], 'filename'),
+    image: new File([''], 'filename'),
+    caption: '',
   }
 
   const toggleErrorModal = () => clearErrorConnect()
@@ -76,8 +77,9 @@ const Home: React.FC<IProps> = ({
   const readURL = (image: File) => {
     setImage(URL.createObjectURL(image))
   }
-  const handleUpdateProfile = async (values: MyFormValues) => {
-    const res = await updateUserConnect(values)
+
+  const handleAddPost = async (values: MyFormValues) => {
+    const res = await addPostConnect(values)
     if (res.success === true && !error) {
       toggleSnackBarConnect()
       history.goBack()
@@ -88,11 +90,12 @@ const Home: React.FC<IProps> = ({
     <>
       <Formik
         initialValues={initialValues}
-        validationSchema={editProfileSchema}
-        onSubmit={handleUpdateProfile}
+        validationSchema={addPostSchema}
+        onSubmit={handleAddPost}
       >
         {(props) => {
           const {
+            values,
             touched,
             errors,
             handleBlur,
@@ -104,7 +107,7 @@ const Home: React.FC<IProps> = ({
             <Grid container item xs={12} sm={12} className={classes.root}>
               <Grid container item xs={12} className={classes.body}>
                 <Form
-                  name='editprofile'
+                  name='addPostForm'
                   onSubmit={handleSubmit}
                   className={classes.form}
                 >
@@ -126,7 +129,7 @@ const Home: React.FC<IProps> = ({
                         <ArrowBackIcon />
                       </IconButton>
                       <Typography variant='h6' className={classes.title}>
-                        Edit
+                        Post
                       </Typography>
                       <IconButton
                         type='submit'
@@ -140,26 +143,29 @@ const Home: React.FC<IProps> = ({
                   </Grid>
                   <Grid container item xs={12} className={classes.profileImage}>
                     <SCProfileImage
-                      image={image ? image : avatar}
+                      size={'320px'}
+                      image={
+                        image ? image : '/assets/uploads/avatars/default.svg'
+                      }
                       handleImageUpload={(
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
-                        setFieldValue('avatar', event.currentTarget.files![0])
+                        setFieldValue('image', event.currentTarget.files![0])
                         readURL(event.currentTarget.files![0])
                       }}
                     />
                   </Grid>
                   <Grid container item xs={12}>
                     <TextField
-                      id='username'
+                      id='caption'
                       className={classes.textField}
-                      name='username'
+                      name='caption'
                       type='text'
-                      placeholder='Username'
-                      defaultValue={username}
+                      placeholder='Caption'
+                      value={values.caption}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      label='Username'
+                      label='Caption'
                       InputProps={{
                         className: classes.input,
                         classes: {
@@ -174,11 +180,9 @@ const Home: React.FC<IProps> = ({
                           focused: classes.labelfocused,
                         },
                       }}
-                      error={!!errors.username && touched.username}
+                      error={!!errors.caption && touched.caption}
                       helperText={
-                        errors.username && touched.username
-                          ? errors.username
-                          : ' '
+                        errors.caption && touched.caption ? errors.caption : ' '
                       }
                     />
                     {error && (
@@ -192,40 +196,14 @@ const Home: React.FC<IProps> = ({
                       />
                     )}
                   </Grid>
-                  <Grid container item xs={12}>
-                    <TextField
-                      id='about'
-                      className={classes.textField}
-                      name='about'
-                      type='text'
-                      placeholder='Bio'
-                      defaultValue={about}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      label='Bio'
-                      InputProps={{
-                        className: classes.input,
-                        classes: {
-                          root: classes.input,
-                          focused: classes.focused,
-                        },
-                      }}
-                      InputLabelProps={{
-                        className: classes.label,
-                        classes: {
-                          root: classes.label,
-                          focused: classes.labelfocused,
-                        },
-                      }}
-                    />
-                  </Grid>
+
                   <Button
                     type='submit'
-                    disabled={userloading || !!errors.username}
+                    disabled={!!errors.caption || !!errors.image || !image}
                     variant='contained'
                     className={classes.saveButton}
                   >
-                    {userloading ? 'Saving...' : 'Save'}
+                    {loading ? 'Posting...' : 'Post'}
                   </Button>
                 </Form>
               </Grid>
@@ -239,19 +217,18 @@ const Home: React.FC<IProps> = ({
 
 const mapStateToProps = (state: IState) => {
   return {
-    user: state.user.user,
-    loading: state.auth.loading,
-    userloading: state.user.loading,
-    error: state.auth.error,
+    error: state.post.error,
+    loading: state.post.loading,
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<UserActions, {}, any>) => {
+const mapDispatchToProps = (dispatch: Dispatch<PostActions, {}, any>) => {
   return {
-    updateUserConnect: (user: updateUserObjProps) => dispatch(updateUser(user)),
+    addPostConnect: (payload: addPostPayloadProps) =>
+      dispatch(addPost(payload)),
     clearErrorConnect: () => dispatch(clearError()),
     toggleSnackBarConnect: () => dispatch(toggleSnackBar()),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Post)

@@ -81,6 +81,10 @@ export const useStyles = makeStyles((theme) => ({
     margin: '20px 0px',
     background: `linear-gradient(to right, ${theme.palette.secondary.dark}, ${theme.palette.secondary.main})`,
     color: theme.palette.primary.main,
+    '&:disabled': {
+      color: theme.palette.primary.light,
+      background: 'lightgray',
+    },
   },
   input: {},
   focused: {
@@ -123,7 +127,7 @@ const Home: React.FC<HomeProps> = ({
             <CameraAltIcon fontSize='large' />
           </IconButton>
           <Typography variant='h6' className={classes.title}>
-            Insta Clone
+            Exogram
           </Typography>
           <IconButton
             className={classes.message}

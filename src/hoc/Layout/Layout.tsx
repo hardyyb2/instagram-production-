@@ -2,7 +2,7 @@ import React from 'react'
 import { Grid } from '@material-ui/core'
 
 import useStyles from './Layout.styles'
-import { SCBottomNavigation } from '../../SCcomponents'
+import { BottomNavigation } from '../../components'
 
 const Layout: React.FC<{}> = ({ children }) => {
   const classes = useStyles()
@@ -13,7 +13,7 @@ const Layout: React.FC<{}> = ({ children }) => {
         {children}
       </Grid>
       <Grid container item xs={12} className={classes.navigation}>
-        <SCBottomNavigation />
+        <BottomNavigation />
       </Grid>
     </Grid>
   )
