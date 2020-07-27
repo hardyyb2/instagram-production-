@@ -9,6 +9,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite'
 import AddIcon from '@material-ui/icons/Add'
 
 import useStyles from './BottomNavigation.styles'
+import { IState } from '../../store/types'
 
 interface IProps {
   username: string
@@ -88,8 +89,8 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
 
 const mapStateToProps = (state: IState) => {
   return {
-    userId: state.user.user._id,
-    username: state.user.user.username,
+    userId: state.user.user ? state.user.user._id : '',
+    username: state.user.user ? state.user.user.username : '',
   }
 }
 
