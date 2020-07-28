@@ -42,16 +42,28 @@ const getPostsByUserId = asyncHandler(async (req, res, next) => {
 })
 
 const toggleLike = asyncHandler(async (req, res, next) => {
+  const postId = req.params.postId
   const post = await Post.findById(req.params.postId)
-  const likeIds = post.likes.map((id) => id.toString())
+  let operator, data, obj
 
-  if (likeIds.includes(req.user.id)) {
-    await post.likes.pull(req.user.id)
+  if (req.url.toLowerCase().includes('removelike')) {
+    operator = '$pull'
+    data = req.user.id
   } else {
-    await post.likes.push(req.user.id)
+    operator = '$push'
+    data = req.user.id
   }
-  await post.save()
-  send(res, 201, post)
+
+  if (post.first3Likes.length < 3) {
+    obj = { [operator]: { likes: data, first3Likes: data } }
+  } else {
+    obj = { [operator]: { likes: data } }
+  }
+
+  const updatedPost = await Post.findByIdAndUpdate(postId, obj, {
+    new: true,
+  }).populate('first3Likes', '_id username avatar')
+  send(res, 201, updatedPost)
 })
 
 const toggleComment = asyncHandler(async (req, res, next) => {

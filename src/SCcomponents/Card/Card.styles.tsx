@@ -109,3 +109,6 @@ export const CardCaption = styled(Grid)`
 export const CardIconButton = styled(IconButton)`
   color: ${theme.palette.warning.dark};
 `
+export const CardStatsContainer = styled(Grid)``
+export const CardStatsLikes = styled(Grid)``
+export const CardStatsComments = styled(Grid)``

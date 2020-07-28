@@ -21,6 +21,7 @@ export interface commentProps {
 
 export interface postProps {
   likes: any[]
+  first3Likes: any[]
   _id: string
   comments: commentProps[]
   caption: string

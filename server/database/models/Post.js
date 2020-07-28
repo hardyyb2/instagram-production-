@@ -14,6 +14,7 @@ const Post = new mongoose.Schema(
       default: Date.now,
     },
     likes: [{ type: ObjectId, ref: 'User' }],
+    first3Likes: [{ type: ObjectId, ref: 'User' }],
     comments: [
       {
         text: String,

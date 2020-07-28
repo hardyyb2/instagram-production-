@@ -68,6 +68,8 @@ export default makeStyles((theme: Theme) => ({
   editProfile: {
     padding: '10px 30px 30px 30px',
     display: 'flex',
+    width: '100%',
+    margin: 'auto',
   },
   editProfileButton: {
     background: `linear-gradient(to right, ${theme.palette.secondary.dark},${theme.palette.secondary.main})`,
@@ -78,6 +80,7 @@ export default makeStyles((theme: Theme) => ({
     padding: '10px 0px',
     width: '100%',
     maxHeight: '46px',
+    margin: 'auto',
   },
   stats: {
     display: 'flex',
