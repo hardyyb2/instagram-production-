@@ -83,6 +83,7 @@ interface changeThemeProps {
 
 export interface toggleSnackBarProps {
   type: constants.TOGGLE_SNACKBAR
+  message: string
 }
 
 const requestUser = (): requestUserProps => {
@@ -131,9 +132,10 @@ export const updatedUser = (user: updateUserObjProps): updateUserProps => {
   }
 }
 
-export const toggleSnackBar = (): toggleSnackBarProps => {
+export const toggleSnackBar = (message: string): toggleSnackBarProps => {
   return {
     type: constants.TOGGLE_SNACKBAR,
+    message,
   }
 }
 

@@ -20,7 +20,6 @@ import {
   addPost,
   addPostPayloadProps,
   clearError,
-  toggleSnackBar,
 } from '../../store/actions'
 import { IState } from '../../store/types'
 import {
@@ -35,7 +34,6 @@ interface IProps {
   loading: boolean
   addPostConnect: (payload: addPostPayloadProps) => any
   clearErrorConnect: () => void
-  toggleSnackBarConnect: () => void
 }
 
 const addPostSchema = Yup.object().shape({
@@ -59,7 +57,6 @@ const Post: React.FC<IProps> = ({
   error,
   loading,
   addPostConnect,
-  toggleSnackBarConnect,
   clearErrorConnect,
 }) => {
   const history = useHistory()
@@ -81,7 +78,6 @@ const Post: React.FC<IProps> = ({
   const handleAddPost = async (values: MyFormValues) => {
     const res = await addPostConnect(values)
     if (res.success === true && !error) {
-      toggleSnackBarConnect()
       history.goBack()
     }
   }
@@ -135,7 +131,7 @@ const Post: React.FC<IProps> = ({
                         type='submit'
                         className={classes.message}
                         color='inherit'
-                        aria-label='message'
+                        aria-label='save'
                       >
                         <CheckIcon />
                       </IconButton>
@@ -154,6 +150,16 @@ const Post: React.FC<IProps> = ({
                         readURL(event.currentTarget.files![0])
                       }}
                     />
+                    {error && (
+                      <SCConfirmModal
+                        open={!!error}
+                        handleClose={toggleErrorModal}
+                        header={'Error'}
+                        subHeader={error}
+                        confirm='Try again'
+                        onConfirm={toggleErrorModal}
+                      />
+                    )}
                   </Grid>
                   <Grid container item xs={12}>
                     <TextField
@@ -199,7 +205,9 @@ const Post: React.FC<IProps> = ({
 
                   <Button
                     type='submit'
-                    disabled={!!errors.caption || !!errors.image || !image}
+                    disabled={
+                      loading || !!errors.caption || !!errors.image || !image
+                    }
                     variant='contained'
                     className={classes.saveButton}
                   >
@@ -227,7 +235,6 @@ const mapDispatchToProps = (dispatch: Dispatch<PostActions, {}, any>) => {
     addPostConnect: (payload: addPostPayloadProps) =>
       dispatch(addPost(payload)),
     clearErrorConnect: () => dispatch(clearError()),
-    toggleSnackBarConnect: () => dispatch(toggleSnackBar()),
   }
 }
 

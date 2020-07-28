@@ -13,6 +13,8 @@ import {
   removeComment,
   addLike,
   removeLike,
+  deletePost,
+  toggleSnackBar,
 } from '../../store/actions'
 import { SCSinglePost, SCAddComment } from '../../SCcomponents/'
 import { PostSkeleton, Spinner } from '../../UX'
@@ -28,6 +30,8 @@ interface IProps {
   deleteCommentConnect: (payload: commentPayloadProps) => void
   addLikeConnect: (postId: string) => void
   removeLikeConnect: (postId: string) => void
+  handleDeletePostConnect: (postId: string) => any
+  toggleSnackBarConnect: (message: string) => void
 }
 
 const Post: React.FC<IProps> = ({
@@ -41,6 +45,8 @@ const Post: React.FC<IProps> = ({
   deleteCommentConnect,
   addLikeConnect,
   removeLikeConnect,
+  handleDeletePostConnect,
+  toggleSnackBarConnect,
 }) => {
   const location = useLocation()
   const history = useHistory()
@@ -93,6 +99,14 @@ const Post: React.FC<IProps> = ({
     deleteCommentConnect(payload)
   }
 
+  const handleDeletePost = async () => {
+    const res = await handleDeletePostConnect(selectedPost!._id)
+    if (res.success) {
+      toggleSnackBarConnect('Post Deleted')
+      history.replace('/profile')
+    }
+  }
+
   return (
     <>
       {selectedPost && !loading ? (
@@ -110,6 +124,7 @@ const Post: React.FC<IProps> = ({
             handleCommentClick={handleCommentClick}
             handleLikeClick={handleLikeClick}
             handleDelete={handleDeleteComment}
+            handleDeletePost={handleDeletePost}
             allowScroll={allowScroll}
           />
           <SCAddComment
@@ -119,7 +134,6 @@ const Post: React.FC<IProps> = ({
           />
         </>
       ) : (
-        // <PostSkeleton />
         <Spinner />
       )}
     </>
@@ -145,6 +159,9 @@ const mapDispatchToProps = (dispatch: Dispatch<PostActions, {}, any>) => {
       dispatch(removeComment(payload)),
     addLikeConnect: (postId: string) => dispatch(addLike(postId)),
     removeLikeConnect: (postId: string) => dispatch(removeLike(postId)),
+    handleDeletePostConnect: (postId: string) => dispatch(deletePost(postId)),
+    toggleSnackBarConnect: (message: string) =>
+      dispatch(toggleSnackBar(message)),
   }
 }
 

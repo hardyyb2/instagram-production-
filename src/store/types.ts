@@ -18,6 +18,7 @@ export interface IUser {
   userFeed: UserProps[] | null
   theme: ThemeOptions
   showSnackBar: boolean
+  snackBarMessage: string
 }
 
 export interface IPosts {

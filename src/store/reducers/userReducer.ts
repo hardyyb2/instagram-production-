@@ -22,6 +22,7 @@ const initialState: IUser = {
   userFeed: null,
   theme: 'light',
   showSnackBar: false,
+  snackBarMessage: '',
 }
 
 const reducer = (state: IUser = initialState, action: UserActions) => {
@@ -82,6 +83,7 @@ const reducer = (state: IUser = initialState, action: UserActions) => {
       return {
         ...state,
         showSnackBar: !state.showSnackBar,
+        snackBarMessage: action.message,
       }
     default:
       return state

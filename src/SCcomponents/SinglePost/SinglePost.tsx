@@ -1,6 +1,6 @@
-import React, { useRef, useLayoutEffect } from 'react'
+import React, { useRef, useLayoutEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { IconButton, makeStyles } from '@material-ui/core'
+import { IconButton, makeStyles, Button } from '@material-ui/core'
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined'
@@ -31,7 +31,8 @@ import {
   LikesContainer,
   CommentsNumberContainer,
 } from '../Card/Card.styles'
-import { Comment } from '../../components'
+import { Comment, Menu as SMenu } from '../../components'
+import { SCConfirmModal } from '..'
 
 interface IProps {
   allowScroll: boolean
@@ -46,6 +47,7 @@ interface IProps {
   handleLikeClick: () => void
   handleCommentClick: () => void
   handleDelete: (id: string) => void
+  handleDeletePost: () => void
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -71,18 +73,28 @@ const SinglePost: React.FC<IProps> = ({
   handleLikeClick,
   handleCommentClick,
   handleDelete,
+  handleDeletePost,
 }) => {
   const classes = useStyles()
   const history = useHistory()
   const lastMessageRef = useRef<HTMLDivElement>(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [deletePostConfirm, setDeleteConfirmModal] = useState(false)
 
   const handleBackButton = () => history.goBack()
+
+  const handleMenuClose = () => setAnchorEl(null)
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
 
   const scrollIntoView = () => {
     if (lastMessageRef.current && allowScroll) {
       lastMessageRef.current.scrollIntoView({ behavior: 'smooth' })
     }
   }
+  useLayoutEffect(scrollIntoView, [comments])
 
   const handleProfilePicClick = () => {
     history.push({
@@ -91,8 +103,21 @@ const SinglePost: React.FC<IProps> = ({
     })
   }
 
-  useLayoutEffect(scrollIntoView, [comments])
+  const toggleDeleteModal = () => setDeleteConfirmModal(!deletePostConfirm)
 
+  const handleDeleteClick = () => {
+    toggleDeleteModal()
+    handleMenuClose()
+  }
+
+  const menuItems = [
+    {
+      title: 'Delete',
+      icon: 'delete',
+      color: 'red',
+      handleClick: handleDeleteClick,
+    },
+  ]
   return (
     <Container>
       <CardHeader container justify='space-between'>
@@ -105,9 +130,20 @@ const SinglePost: React.FC<IProps> = ({
           <HeaderImage src={userImage} alt={userName} />
         </HeaderImageContainer>
         <Menu>
-          <IconButton aria-label='back' className={classes.iconButton}>
+          <IconButton
+            aria-label='menu'
+            className={classes.iconButton}
+            aria-controls='simple-menu'
+            aria-haspopup='true'
+            onClick={handleMenuClick}
+          >
             <MoreHorizIcon />
           </IconButton>
+          <SMenu
+            anchorEl={anchorEl}
+            handleClose={handleMenuClose}
+            menuItems={menuItems}
+          />
         </Menu>
       </CardHeader>
       <Wrapper image={postImage}>
@@ -169,7 +205,16 @@ const SinglePost: React.FC<IProps> = ({
         )}
         <div ref={lastMessageRef} />
       </CommentContainer>
-      <AddCommentContainer></AddCommentContainer>
+      <AddCommentContainer />
+      <SCConfirmModal
+        open={deletePostConfirm}
+        header={'Delete Post'}
+        subHeader={'Once deleted, post cannot be retrieved again.'}
+        confirm={'Delete'}
+        onConfirm={handleDeletePost}
+        onCancel={toggleDeleteModal}
+        handleClose={toggleDeleteModal}
+      />
     </Container>
   )
 }

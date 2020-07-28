@@ -35,7 +35,7 @@ interface IProps {
   error: string | null
   updateUserConnect: (user: updateUserObjProps) => any
   clearErrorConnect: () => void
-  toggleSnackBarConnect: () => void
+  toggleSnackBarConnect: (message: string) => void
 }
 
 const editProfileSchema = Yup.object().shape({
@@ -79,7 +79,7 @@ const Home: React.FC<IProps> = ({
   const handleUpdateProfile = async (values: MyFormValues) => {
     const res = await updateUserConnect(values)
     if (res.success === true && !error) {
-      toggleSnackBarConnect()
+      toggleSnackBarConnect('Profile Updated')
       history.goBack()
     }
   }
@@ -250,7 +250,8 @@ const mapDispatchToProps = (dispatch: Dispatch<UserActions, {}, any>) => {
   return {
     updateUserConnect: (user: updateUserObjProps) => dispatch(updateUser(user)),
     clearErrorConnect: () => dispatch(clearError()),
-    toggleSnackBarConnect: () => dispatch(toggleSnackBar()),
+    toggleSnackBarConnect: (message: string) =>
+      dispatch(toggleSnackBar(message)),
   }
 }
 
