@@ -1,10 +1,8 @@
 const asyncHandler = require('../middlewares/AsyncHandler')
-const ErrorResponse = require('../utils/errorResponse')
 const { send, avatarUploadOptions } = require('../utils/utils')
 const Post = require('../database/models/Post')
 const multer = require('multer')
 const jimp = require('jimp')
-const { opacity } = require('jimp')
 
 const uploadPost = multer(avatarUploadOptions).single('image')
 
@@ -62,7 +60,11 @@ const toggleLike = asyncHandler(async (req, res, next) => {
 
   const updatedPost = await Post.findByIdAndUpdate(postId, obj, {
     new: true,
-  }).populate('first3Likes', '_id username avatar')
+  })
+    .populate('first3Likes', '_id username avatar')
+    .populate('postedBy', '_id username avatar')
+    .populate('comments.postedBy', '_id username avatar')
+
   send(res, 201, updatedPost)
 })
 

@@ -30,7 +30,7 @@ import {
 } from './Card.styles'
 import { postProps } from '../../store/actions'
 import { timeDifference } from '../../utils/helpers'
-import { LikedContainer } from '../../components'
+import { LikedContainer, Caption } from '../../components'
 
 interface IProps {
   isLiked: boolean
@@ -65,7 +65,7 @@ const Card: React.FC<IProps> = ({
     postedBy: { avatar: userImage },
     postedBy: { username: userName },
     createdAt: time,
-    likes,
+    first3Likes,
   } = post
 
   const getRelativeTime = (time: string): string => {
@@ -116,8 +116,20 @@ const Card: React.FC<IProps> = ({
             </CommentsNumberContainer>
           </CardFooter>
           <CardStatsContainer>
-            <CardStatsLikes>{/* <LikedContainer /> */}</CardStatsLikes>
-            <CardStatsComments></CardStatsComments>
+            <CardStatsLikes>
+              {first3Likes.length !== 0 && (
+                <LikedContainer
+                  avatars={first3Likes}
+                  likeNumber={post.likes.length - 1}
+                />
+              )}
+            </CardStatsLikes>
+            <CardStatsComments>
+              <Caption
+                userName={post.postedBy.username}
+                caption={post.caption}
+              />
+            </CardStatsComments>
           </CardStatsContainer>
         </CardWrapper>
       </CardPaper>

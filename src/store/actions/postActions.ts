@@ -173,7 +173,7 @@ export const addPost = (payload: addPostPayloadProps) => async (
     selectedUserPosts.unshift(data)
 
     dispatch(receivedPostFeed(otherPostData))
-    dispatch(receivePostsById(otherPostData))
+    dispatch(receivePostsById(selectedUserPosts))
 
     dispatch(addedPost())
     return new Promise((resolve, reject) => {

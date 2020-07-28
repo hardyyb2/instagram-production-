@@ -18,3 +18,4 @@
 - DoubleClick Post to Like
 - Save JWT
 - Remember Me
+- Replace only likes or comments and not whole post.

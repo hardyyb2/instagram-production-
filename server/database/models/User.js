@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
       required: [true, 'Avatar image is required'],
-      default: '/uploads/avatars/default.svg',
+      default: '/exo.jpg',
     },
     about: {
       type: String,

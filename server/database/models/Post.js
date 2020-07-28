@@ -31,6 +31,7 @@ const Post = new mongoose.Schema(
 const autoPopulatePostedBy = function (next) {
   this.populate('postedBy', '_id username avatar')
   this.populate('comments.postedBy', '_id username avatar')
+  this.populate('first3Likes', '_id username avatar')
   next()
 }
 

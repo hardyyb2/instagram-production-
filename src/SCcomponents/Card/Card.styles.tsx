@@ -28,7 +28,7 @@ export const CardHeader = styled(Grid)`
 export const HeaderImageContainer = styled.div<{ size?: string }>`
   width: ${({ size }) => (size ? size : '50px')};
   height: ${({ size }) => (size ? size : '50px')};
-  border-radius: 50%;
+  border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   overflow: hidden;
 `
@@ -81,6 +81,7 @@ export const CardImage = styled.img`
 export const CardFooter = styled(Grid)`
   padding: 10px;
   margin-top: -40px;
+  padding-bottom: 0px;
 `
 
 export const LikesContainer = styled(Grid)`
