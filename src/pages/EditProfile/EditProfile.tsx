@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Formik, Form } from 'formik'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import * as Yup from 'yup'
+import { useHistory } from 'react-router-dom'
 
 import {
   Grid,
@@ -23,10 +24,9 @@ import {
   UserProps,
   toggleSnackBar,
 } from '../../store/actions/userActions'
-import { useStyles } from '../Home/Home'
 import { SCConfirmModal, SCProfileImage } from '../../SCcomponents'
 import { clearError } from '../../store/actions'
-import { useHistory } from 'react-router-dom'
+import useStyles from '../Home/Home.styles'
 
 interface IProps {
   loading: boolean

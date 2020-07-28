@@ -26,8 +26,8 @@ import {
   checkIfFilesAreTooBig,
   checkIfFilesAreCorrectType,
 } from '../../utils/helpers'
-import { useStyles } from '../Home/Home'
 import { SCProfileImage, SCConfirmModal } from '../../SCcomponents'
+import useStyles from '../Home/Home.styles'
 
 interface IProps {
   error: string | null

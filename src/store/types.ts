@@ -1,4 +1,4 @@
-import { UserProps, ThemeOptions } from './actions/userActions'
+import { UserProps, ThemeOptions, userFeedUsers } from './actions/userActions'
 import { postProps } from './actions'
 
 export interface IAuth {
@@ -15,7 +15,7 @@ export interface IUser {
   users: any[] | null
   error: string | null
   loading: boolean
-  userFeed: UserProps[] | null
+  userFeed: userFeedUsers[] | null
   theme: ThemeOptions
   showSnackBar: boolean
   snackBarMessage: string

@@ -25,7 +25,9 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
     if (location.pathname !== '/home') history.push('/home')
   }
 
-  const handleExploreClick = () => {}
+  const handleExploreClick = () => {
+    if (location.pathname !== '/explore') history.push('/explore')
+  }
   const handleAddPostClick = () => {
     if (location.pathname !== '/addpost') history.push('/addpost')
   }
@@ -54,11 +56,7 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
         </Button>
       </Grid>
       <Grid item container xs={2} className={classes.container}>
-        <Button
-          onClick={handleExploreClick}
-          className={classes.button}
-          disabled
-        >
+        <Button onClick={handleExploreClick} className={classes.button}>
           <SearchIcon fontSize='large' />
         </Button>
       </Grid>

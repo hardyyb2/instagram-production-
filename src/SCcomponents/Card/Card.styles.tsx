@@ -21,7 +21,7 @@ export const CardWrapper = styled(Grid)`
 export const CardHeader = styled(Grid)`
   border-top-right-radius: 25px;
   border-top-left-radius: 25px;
-  padding: 10px;
+  padding: 15px;
   padding-bottom: 0px;
 `
 
@@ -86,7 +86,6 @@ export const CardFooter = styled(Grid)`
 
 export const LikesContainer = styled(Grid)`
   display: flex;
-  margin-right: 15px;
 `
 export const CommentsNumberContainer = styled(Grid)`
   display: flex;

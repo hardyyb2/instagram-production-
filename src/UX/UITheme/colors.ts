@@ -6,7 +6,7 @@ export const chosentheme = {
       dark: '#f5f5f5',
     },
     secondary: {
-      light: 'rgba(250,69,0,0.5)',
+      light: 'rgba(250,69,0,0.12)',
       main: '#fa7d09',
       dark: '#ff4500',
     },

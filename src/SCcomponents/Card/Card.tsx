@@ -23,7 +23,6 @@ import {
   CommentsNumberContainer,
   CardPaper,
   CardIconButton,
-  Count,
   CardStatsContainer,
   CardStatsLikes,
   CardStatsComments,
@@ -46,6 +45,15 @@ interface IProps {
 const useStyles = makeStyles((theme) => ({
   liked: {
     color: theme.palette.info.main,
+  },
+  like: {
+    fontSize: '2.2rem',
+  },
+  comments: {
+    fontSize: '2rem',
+  },
+  noRightPadding: {
+    paddingRight: '0px',
   },
 }))
 
@@ -96,23 +104,27 @@ const Card: React.FC<IProps> = ({
           </CardImageContainer>
           <CardFooter container direction='row' justify='flex-start'>
             <LikesContainer>
-              <CardIconButton onClick={handleLikeClick} aria-label='like'>
+              <CardIconButton
+                onClick={handleLikeClick}
+                aria-label='like'
+                className={classes.noRightPadding}
+              >
                 {isLiked ? (
-                  <FavoriteIcon className={classes.liked} />
+                  <FavoriteIcon
+                    className={`${classes.liked} ${classes.like}`}
+                  />
                 ) : (
-                  <FavoriteBorderOutlinedIcon />
+                  <FavoriteBorderOutlinedIcon className={classes.like} />
                 )}
               </CardIconButton>
-              <Count>{post.likes.length}</Count>
             </LikesContainer>
             <CommentsNumberContainer>
               <CardIconButton
                 onClick={handleCommentClick}
                 aria-label='comments'
               >
-                <ChatBubbleOutlineOutlinedIcon />
+                <ChatBubbleOutlineOutlinedIcon className={classes.comments} />
               </CardIconButton>
-              <Count>{post.comments.length}</Count>
             </CommentsNumberContainer>
           </CardFooter>
           <CardStatsContainer>

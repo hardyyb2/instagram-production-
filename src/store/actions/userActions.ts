@@ -8,8 +8,8 @@ import { objectToFormData } from '../../utils/helpers'
 export interface UserProps {
   avatar: string
   account_created: string
-  following: userFeedUsers[]
-  followers: userFeedUsers[]
+  following: string[]
+  followers: string[]
   _id: string
   username: string
   email: string

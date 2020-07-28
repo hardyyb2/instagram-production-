@@ -17,6 +17,7 @@ export default makeStyles((theme: Theme) => ({
   },
   text: {
     paddingLeft: 12,
+    fontSize: '0.75rem',
     fontWeight: 'bold',
     color: theme.palette.warning.light,
     '& strong': {

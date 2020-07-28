@@ -20,7 +20,7 @@ export default makeStyles((theme: Theme) => ({
   },
   title: {
     color: theme.palette.warning.dark,
-    fontSize: '1.8rem',
+    fontSize: '1.2rem',
     fontFamily: 'cursive',
   },
   message: {

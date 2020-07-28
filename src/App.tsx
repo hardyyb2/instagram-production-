@@ -23,6 +23,7 @@ const EditProfile = lazy(() => import('./pages/EditProfile/EditProfile'))
 const Profile = lazy(() => import('./pages/Profile/Profile'))
 const Post = lazy(() => import('./pages/Post/Post'))
 const AddPost = lazy(() => import('./pages/AddPost/AddPost'))
+const Explore = lazy(() => import('./pages/Explore/Explore'))
 
 export const LoadingScreen: React.FC<{}> = () => (
   <Grid container justify='center' className={`LoadingScreen`}>
@@ -99,6 +100,13 @@ const App: React.FC<IProps> = ({
             isAuthenticated={isAuthenticated}
             isVerifying={isVerifying}
             noNavigation
+          />
+          <ProtectedRoute
+            exact
+            path='/explore'
+            component={Explore}
+            isAuthenticated={isAuthenticated}
+            isVerifying={isVerifying}
           />
           <PublicRoute path='/login' exact={true} component={Login} />
           <PublicRoute path='/signup' exact={true} component={Signup} />
