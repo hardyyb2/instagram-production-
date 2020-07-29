@@ -33,7 +33,7 @@ export default makeStyles((theme: Theme) => ({
     height: '100%',
   },
   details: {
-    padding: '30px 30px 5px 30px',
+    padding: '30px 30px 15px 30px',
   },
   imageContainer: {
     width: '70px',
@@ -103,7 +103,7 @@ export default makeStyles((theme: Theme) => ({
     color: theme.palette.warning.light,
   },
   actionButtons: {
-    padding: '25px 40px',
+    padding: '25px 30px',
     display: 'flex',
     justifyContent: 'space-between',
     flex: '1 1 auto',
