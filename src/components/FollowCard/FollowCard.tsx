@@ -9,6 +9,7 @@ import useStyles from './FollowCard.styles'
 import { UserProps, userFeedUsers } from '../../store/actions'
 import { FollowButton } from '..'
 import { isEmpty } from 'lodash'
+import { FollowCardSkeleton } from '../../UX'
 
 interface IProps {
   userFeed: userFeedUsers[] | null
@@ -67,7 +68,7 @@ const FollowCard: React.FC<IProps> = ({ userFeed, user }) => {
         )
       ) : (
         <Grid container justify='center'>
-          Loading...
+          <FollowCardSkeleton />
         </Grid>
       )}
     </Grid>

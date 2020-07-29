@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Grid, Paper, IconButton } from '@material-ui/core'
+import { Grid, Paper, IconButton, Button } from '@material-ui/core'
 
 import { theme } from '../../UX/UITheme/colors'
 
@@ -32,7 +32,6 @@ export const HeaderImageContainer = styled.div<{ size?: string }>`
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
   overflow: hidden;
 `
-
 export const HeaderImage = styled.img`
   display: block;
   object-fit: cover;
@@ -112,3 +111,19 @@ export const CardIconButton = styled(IconButton)`
 export const CardStatsContainer = styled(Grid)``
 export const CardStatsLikes = styled(Grid)``
 export const CardStatsComments = styled(Grid)``
+
+export const CommentsContainer = styled.div`
+  width: 100%;
+  padding-top: 5px;
+`
+
+export const CommentsButton = styled(Button)`
+  width: 100%;
+  background: ${theme.palette.secondary.light};
+  padding: 12px;
+  border: none;
+  font-weight: bolder;
+  font-size: 1rem;
+  color: ${theme.palette.secondary.dark};
+  text-transform: capitalize;
+`

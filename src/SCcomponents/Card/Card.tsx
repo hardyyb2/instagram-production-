@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core'
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined'
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined'
 import FavoriteIcon from '@material-ui/icons/Favorite'
-import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 import {
@@ -26,6 +25,8 @@ import {
   CardStatsContainer,
   CardStatsLikes,
   CardStatsComments,
+  CommentsContainer,
+  CommentsButton,
 } from './Card.styles'
 import { postProps } from '../../store/actions'
 import { timeDifference } from '../../utils/helpers'
@@ -143,6 +144,13 @@ const Card: React.FC<IProps> = ({
               />
             </CardStatsComments>
           </CardStatsContainer>
+          {post.comments.length > 0 && (
+            <CommentsContainer>
+              <CommentsButton onClick={handleCommentClick}>
+                See {post.comments.length} Comments
+              </CommentsButton>
+            </CommentsContainer>
+          )}
         </CardWrapper>
       </CardPaper>
     </CardContainer>

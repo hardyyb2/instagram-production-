@@ -3,12 +3,14 @@ import { makeStyles, Theme } from '@material-ui/core'
 export default makeStyles((theme: Theme) => ({
   root: {},
   avatar: {
+    width: '30px',
+    height: '30px',
     border: `4px solid ${theme.palette.primary.main}`,
-    borderRadius: '12px',
+    borderRadius: '10px',
   },
   leftAvatar: {
     position: 'relative',
-    left: '-25px',
+    left: '-12px',
   },
   avatarGroup: {
     paddingLeft: 15,
