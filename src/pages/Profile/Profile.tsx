@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useLayoutEffect } from 'react'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import { connect } from 'react-redux'
 import { useLocation, useHistory } from 'react-router-dom'
+import { find } from 'lodash'
 import { Grid, IconButton, Typography, AppBar, Button } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
@@ -19,11 +20,15 @@ import {
   toggleSnackBar,
 } from '../../store/actions'
 import { IState } from '../../store/types'
-import { SnackBar } from '../../components'
+import { SnackBar, FollowButton } from '../../components'
 import useStyles from './Profile.styles'
+import { Spinner } from '../../UX'
 
 interface IProps {
   userId: string
+  user: UserProps
+  userloading: boolean
+  postloading: boolean
   selectedUser: UserProps
   selectedUserPosts: postProps[] | null
   showSnackBar: boolean
@@ -35,6 +40,9 @@ interface IProps {
 
 const Profile: React.FC<IProps> = ({
   userId,
+  user,
+  userloading,
+  postloading,
   selectedUser,
   selectedUserPosts,
   showSnackBar,
@@ -47,13 +55,14 @@ const Profile: React.FC<IProps> = ({
   const location = useLocation()
   const history = useHistory()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (location.search) {
       const params = new URLSearchParams(location.search)
-      if (params.get('userId')) {
+      const userid = params.get('userId')
+      if (userid) {
         Promise.all([
-          getPostByUserIdConnect(params.get('userId')!),
-          getUserByIdConnect(params.get('userId')!),
+          getPostByUserIdConnect(userid!),
+          getUserByIdConnect(userid!),
         ])
       } else {
         // history.push('/home')
@@ -66,7 +75,7 @@ const Profile: React.FC<IProps> = ({
         toggleSnackBarConnect('')
       }
     }
-  }, [])
+  }, [location.search])
 
   const handleBackClick = () => history.goBack()
 
@@ -78,49 +87,168 @@ const Profile: React.FC<IProps> = ({
 
   const handleEditProfile = () => history.push('/editprofile')
 
-  return (
-    <Grid container item xs={12} sm={12} className={classes.root}>
-      <AppBar position='sticky' className={classes.appBar}>
-        <IconButton
-          edge='start'
-          className={classes.camera}
-          color='inherit'
-          aria-label='camera'
-          onClick={handleBackClick}
-        >
-          <ArrowBackIcon fontSize='large' />
-        </IconButton>
+  const findExistence = (userId: string) => {
+    let payload = {
+      userId,
+      follow: true,
+    }
+    if (
+      find(user.following, ['_id', userId]) ||
+      user.following.includes(userId)
+    ) {
+      payload.follow = false
+    }
+    return payload
+  }
 
-        <Typography variant='h6' className={classes.title}>
-          {selectedUser ? (
-            selectedUser.username
-          ) : (
-            <Skeleton
-              className={classes.skeleton}
-              classes={{
-                wave: classes.wave,
-              }}
-              animation='wave'
-            />
-          )}
-        </Typography>
-        <IconButton
-          className={classes.message}
-          color='inherit'
-          aria-label='message'
-        >
-          <MoreHorizIcon fontSize='large' />
-        </IconButton>
-      </AppBar>
-      <Grid container className={classes.body}>
-        <Grid container item className={classes.details} direction='row'>
-          <Grid item className={classes.imageContainer}>
+  if (!postloading)
+    return (
+      <Grid container item xs={12} sm={12} className={classes.root}>
+        <AppBar position='sticky' className={classes.appBar}>
+          <IconButton
+            edge='start'
+            className={classes.camera}
+            color='inherit'
+            aria-label='camera'
+            onClick={handleBackClick}
+          >
+            <ArrowBackIcon fontSize='large' />
+          </IconButton>
+
+          <Typography variant='h6' className={classes.title}>
             {selectedUser ? (
-              <img
-                src={selectedUser.avatar}
-                alt='profile'
-                className={classes.image}
+              selectedUser.username
+            ) : (
+              <Skeleton
+                className={classes.skeleton}
+                height='100%'
+                classes={{
+                  wave: classes.wave,
+                }}
+                animation='wave'
               />
+            )}
+          </Typography>
+          <IconButton
+            className={classes.message}
+            color='inherit'
+            aria-label='message'
+          >
+            <MoreHorizIcon fontSize='large' />
+          </IconButton>
+        </AppBar>
+        <Grid container className={classes.body}>
+          <Grid container item className={classes.details} direction='row'>
+            <Grid item className={classes.imageContainer}>
+              {selectedUser ? (
+                <img
+                  src={selectedUser.avatar}
+                  alt='profile'
+                  className={classes.image}
+                />
+              ) : (
+                <Skeleton
+                  className={classes.skeleton}
+                  height='100%'
+                  classes={{
+                    wave: classes.wave,
+                  }}
+                  animation='wave'
+                />
+              )}
+            </Grid>
+            <Grid item className={classes.info}>
+              <Grid item className={classes.userName}>
+                {selectedUser ? (
+                  selectedUser.username
+                ) : (
+                  <Skeleton
+                    className={classes.skeleton}
+                    classes={{
+                      wave: classes.wave,
+                    }}
+                    animation='wave'
+                  />
+                )}
+              </Grid>
+              <Grid item className={classes.bio}>
+                {selectedUser ? (
+                  selectedUser.about || 'No Bio'
+                ) : (
+                  <Skeleton
+                    className={classes.skeleton}
+                    height='100%'
+                    classes={{
+                      wave: classes.wave,
+                    }}
+                    animation='wave'
+                  />
+                )}
+              </Grid>
+            </Grid>
+          </Grid>
+          {selectedUser && selectedUser._id === userId && (
+            <Grid item xs={12} className={classes.editProfile}>
+              <Button
+                variant='outlined'
+                startIcon={<EditOutlinedIcon />}
+                className={classes.editProfileButton}
+                onClick={handleEditProfile}
+              >
+                Edit Profile
+              </Button>
+            </Grid>
+          )}
+
+          <Grid item className={classes.stats}>
+            {selectedUser && selectedUserPosts ? (
+              <>
+                <Grid
+                  container
+                  item
+                  direction='column'
+                  justify='center'
+                  xs={4}
+                  className={classes.statsContainer}
+                >
+                  <Grid item className={classes.statsNumber}>
+                    {selectedUserPosts.length}
+                  </Grid>
+                  <Grid item className={classes.statsText}>
+                    Posts
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  item
+                  direction='column'
+                  justify='center'
+                  xs={4}
+                  className={classes.statsContainer}
+                >
+                  <Grid item className={classes.statsNumber}>
+                    {selectedUser.followers.length}
+                  </Grid>
+                  <Grid item className={classes.statsText}>
+                    Followers
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  item
+                  direction='column'
+                  justify='center'
+                  xs={4}
+                  className={classes.statsContainer}
+                >
+                  <Grid item className={classes.statsNumber}>
+                    {selectedUser.following.length}
+                  </Grid>
+                  <Grid item className={classes.statsText}>
+                    Following
+                  </Grid>
+                </Grid>
+              </>
             ) : (
               <Skeleton
                 className={classes.skeleton}
@@ -131,193 +259,107 @@ const Profile: React.FC<IProps> = ({
               />
             )}
           </Grid>
-          <Grid item className={classes.info}>
-            <Grid item className={classes.userName}>
-              {selectedUser ? (
-                selectedUser.username
-              ) : (
-                <Skeleton
-                  className={classes.skeleton}
-                  classes={{
-                    wave: classes.wave,
-                  }}
-                  animation='wave'
-                />
-              )}
-            </Grid>
-            <Grid item className={classes.bio}>
-              {selectedUser ? (
-                selectedUser.about || 'No Bio'
-              ) : (
-                <Skeleton
-                  className={classes.skeleton}
-                  classes={{
-                    wave: classes.wave,
-                  }}
-                  animation='wave'
-                />
-              )}
-            </Grid>
-          </Grid>
-        </Grid>
-        {selectedUser && selectedUser._id === userId && (
-          <Grid item xs={12} className={classes.editProfile}>
-            <Button
-              variant='outlined'
-              startIcon={<EditOutlinedIcon />}
-              className={classes.editProfileButton}
-              onClick={handleEditProfile}
+          {selectedUser && selectedUser._id !== userId && (
+            <Grid
+              container
+              item
+              xs={12}
+              sm={12}
+              className={classes.actionButtons}
             >
-              Edit Profile
-            </Button>
-          </Grid>
-        )}
-
-        <Grid item className={classes.stats}>
-          {selectedUser && selectedUserPosts ? (
-            <>
-              <Grid
-                container
-                item
-                direction='column'
-                justify='center'
-                xs={4}
-                className={classes.statsContainer}
-              >
-                <Grid item className={classes.statsNumber}>
-                  {selectedUserPosts.length}
-                </Grid>
-                <Grid item className={classes.statsText}>
-                  Posts
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                item
-                direction='column'
-                justify='center'
-                xs={4}
-                className={classes.statsContainer}
-              >
-                <Grid item className={classes.statsNumber}>
-                  {selectedUser.followers.length}
-                </Grid>
-                <Grid item className={classes.statsText}>
-                  Followers
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                item
-                direction='column'
-                justify='center'
-                xs={4}
-                className={classes.statsContainer}
-              >
-                <Grid item className={classes.statsNumber}>
-                  {selectedUser.following.length}
-                </Grid>
-                <Grid item className={classes.statsText}>
-                  Following
-                </Grid>
-              </Grid>
-            </>
-          ) : (
-            <Skeleton
-              className={classes.skeleton}
-              classes={{
-                wave: classes.wave,
-              }}
-              animation='wave'
-            />
+              <FollowButton
+                design={classes.followButton}
+                follows={
+                  !!find(user.following, ['_id', selectedUser._id]) ||
+                  user.following.includes(selectedUser._id)
+                }
+                payload={findExistence(selectedUser._id)}
+              />
+              <IconButton className={classes.messageButton}>
+                <TelegramIcon fontSize='large' />
+              </IconButton>
+            </Grid>
           )}
-        </Grid>
-        {selectedUser && selectedUser._id !== userId && (
           <Grid
             container
             item
             xs={12}
             sm={12}
-            className={classes.actionButtons}
+            className={classes.postContainer}
           >
-            <Button className={classes.followButton} variant='contained'>
-              Follow
-            </Button>
-            <IconButton className={classes.messageButton}>
-              <TelegramIcon fontSize='large' />
-            </IconButton>
-          </Grid>
-        )}
-        <Grid container item xs={12} sm={12} className={classes.postContainer}>
-          {selectedUserPosts ? (
-            selectedUserPosts.length !== 0 ? (
-              selectedUserPosts.map((post, index) => (
+            {selectedUserPosts ? (
+              selectedUserPosts.length !== 0 ? (
+                selectedUserPosts.map((post, index) => (
+                  <Grid
+                    item
+                    xs={4}
+                    className={classes.postWrapper}
+                    key={post._id}
+                    onClick={() => handlePostCardClick(post)}
+                  >
+                    <img
+                      src={post.image}
+                      alt='post'
+                      className={classes.postImage}
+                    />
+                  </Grid>
+                ))
+              ) : (
                 <Grid
+                  container
                   item
-                  xs={4}
-                  className={classes.postWrapper}
-                  key={post._id}
-                  onClick={() => handlePostCardClick(post)}
+                  xs={12}
+                  justify='center'
+                  direction='column'
+                  className={classes.noPostsContainer}
                 >
-                  <img
-                    src={post.image}
-                    alt='post'
-                    className={classes.postImage}
+                  <CameraAltIcon
+                    className={classes.noPostsIcon}
+                    fontSize='large'
                   />
+                  <Grid item className={classes.noPostsText}>
+                    No Posts Yet
+                  </Grid>
                 </Grid>
-              ))
+              )
             ) : (
-              <Grid
-                container
-                item
-                xs={12}
-                justify='center'
-                direction='column'
-                className={classes.noPostsContainer}
-              >
-                <CameraAltIcon
-                  className={classes.noPostsIcon}
-                  fontSize='large'
-                />
-                <Grid item className={classes.noPostsText}>
-                  No Posts Yet
-                </Grid>
-              </Grid>
-            )
-          ) : (
-            Array(9)
-              .fill(undefined)
-              .map((arr, index) => (
-                <Grid item xs={4} className={classes.postWrapper}>
-                  <Skeleton
-                    key={index}
-                    className={classes.skeleton}
-                    classes={{
-                      wave: classes.wave,
-                    }}
-                    animation='wave'
-                  />
-                </Grid>
-              ))
-          )}
-        </Grid>
-        <Grid container item xs={12}>
-          {snackBarMessage && (
-            <SnackBar
-              open={showSnackBar}
-              message={snackBarMessage}
-              handleClose={() => toggleSnackBarConnect('')}
-            />
-          )}
+              Array(9)
+                .fill(undefined)
+                .map((arr, index) => (
+                  <Grid item xs={4} className={classes.postWrapper}>
+                    <Skeleton
+                      key={index}
+                      className={classes.skeleton}
+                      classes={{
+                        wave: classes.wave,
+                      }}
+                      animation='wave'
+                    />
+                  </Grid>
+                ))
+            )}
+          </Grid>
+          <Grid container item xs={12}>
+            {snackBarMessage && (
+              <SnackBar
+                open={showSnackBar}
+                message={snackBarMessage}
+                handleClose={() => toggleSnackBarConnect('')}
+              />
+            )}
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
-  )
+    )
+  else return <Spinner />
 }
 
 const mapStateToProps = (state: IState) => {
   return {
     userId: state.user.user._id,
+    user: state.user.user,
+    userloading: state.user.loading,
+    postloading: state.post.loading,
     selectedUserPosts: state.post.selectedUserPosts,
     selectedUser: state.user.getUser,
     showSnackBar: state.user.showSnackBar,

@@ -12,21 +12,26 @@ import useStyles from './FollowButton.styles'
 
 interface IProps {
   payload: followUserObj
+  design: any
+  follows: boolean
   followUserConnect: (payload: followUserObj) => void
 }
 
-const FollowButton: React.FC<IProps> = ({ payload, followUserConnect }) => {
+const FollowButton: React.FC<IProps> = ({
+  payload,
+  design,
+  follows,
+  followUserConnect,
+}) => {
   const classes = useStyles()
-  const classFollow = !payload.follow
-    ? `${classes.button} ${classes.following}`
-    : `${classes.button}`
+  let classFollow = follows ? `${classes.following} ${design} ` : `${design}`
 
   const handleFollowUser = () => {
     followUserConnect(payload)
   }
   return (
     <Button onClick={handleFollowUser} className={classFollow}>
-      {!payload.follow ? 'Following' : 'Follow'}
+      {follows ? 'Following' : 'Follow'}
     </Button>
   )
 }

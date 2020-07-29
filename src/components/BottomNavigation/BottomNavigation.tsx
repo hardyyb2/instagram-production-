@@ -32,11 +32,10 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
     if (location.pathname !== '/addpost') history.push('/addpost')
   }
   const handleProfileClick = () => {
-    if (location.pathname !== '/profile')
-      history.push({
-        pathname: '/profile',
-        search: `user=${username}&userId=${userId}`,
-      })
+    history.push({
+      pathname: '/profile',
+      search: `user=${username}&userId=${userId}`,
+    })
   }
 
   const handleActivityClick = () => {}

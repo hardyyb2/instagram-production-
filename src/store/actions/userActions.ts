@@ -1,9 +1,10 @@
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
-import { get } from 'lodash'
+import { get, find, remove, findIndex } from 'lodash'
 
 import apiClient from '../../apiInstance'
 import * as constants from '../constants'
 import { objectToFormData } from '../../utils/helpers'
+import { IState } from '../types'
 
 export interface UserProps {
   avatar: string
@@ -246,19 +247,34 @@ export const updateUser = (user: updateUserObjProps): any => async (
 }
 
 export const followUser = (payload: followUserObj) => async (
-  dispatch: Dispatch<UserActions, {}, any>
+  dispatch: Dispatch<UserActions, {}, any>,
+  getState: () => IState
 ) => {
   dispatch(requestUser())
   try {
     const follow = get(payload, 'follow', true)
     const userId = get(payload, 'userId', '')
+    const myId = getState().user.user._id
     const response = await apiClient().put(
       `/user/${follow ? 'follow' : 'unfollow'}/${userId}`
     )
     const { data } = response.data
+    if (get(getState(), 'user.getUser._id') === userId) {
+      const newUser = Object.assign({}, getState().user.getUser)
+      follow
+        ? newUser.followers.push(myId)
+        : newUser.followers.includes(myId)
+        ? newUser.followers.pop(myId)
+        : newUser.followers.splice(
+            findIndex(newUser.followers, ['_id', myId]),
+            1
+          )
+      dispatch(setUserById(newUser))
+    }
     dispatch(updatedUser(data))
     return data
   } catch (err) {
+    console.log(err)
     if (err.response === undefined)
       dispatch(getUserError('Something went wrong'))
     dispatch(getUserError(err.response.data.error))

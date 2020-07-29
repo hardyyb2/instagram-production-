@@ -28,4 +28,12 @@ export default makeStyles((theme: Theme) => ({
   followButtonWrapper: {
     padding: '15px ',
   },
+  followButton: {
+    background: `linear-gradient(to right, ${theme.palette.secondary.dark},${theme.palette.secondary.main})`,
+    borderRadius: '6px',
+    width: '100%',
+    color: theme.palette.primary.main,
+    textTransform: 'capitalize',
+    fontWeight: 'bolder',
+  },
 }))
