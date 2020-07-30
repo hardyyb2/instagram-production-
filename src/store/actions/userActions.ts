@@ -1,5 +1,5 @@
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
-import { get, find, remove, findIndex } from 'lodash'
+import { get, findIndex } from 'lodash'
 
 import apiClient from '../../apiInstance'
 import * as constants from '../constants'

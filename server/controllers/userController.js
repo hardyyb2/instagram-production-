@@ -162,10 +162,13 @@ const addFollower = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
   await User.findByIdAndUpdate(
-    otherId,
+    ownId,
     {
       $push: {
-        followers: ownId,
+        followers: otherId,
+      },
+      $pull: {
+        requested: otherId,
       },
     },
     {
@@ -179,10 +182,13 @@ const addFollowing = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
   const updatedUser = await User.findByIdAndUpdate(
-    ownId,
+    otherId,
     {
       $push: {
-        following: otherId,
+        following: ownId,
+      },
+      $pull: {
+        requesting: ownId,
       },
     },
     {
