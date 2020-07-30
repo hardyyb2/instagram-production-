@@ -68,7 +68,7 @@ const resizeAvatar = asyncHandler(async (req, res, next) => {
   }
 
   const extension = req.file.mimetype.split('/')[1]
-  req.body.avatar = `public/uploads/avatars/${req.profile.username}.${extension}`
+  req.body.avatar = `/uploads/avatars/${req.profile.username}.${extension}`
 
   const image = await jimp.read(req.file.buffer)
   await image.resize(250, jimp.AUTO)

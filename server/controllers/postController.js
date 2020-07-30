@@ -12,7 +12,7 @@ const resizePost = asyncHandler(async (req, res, next) => {
   }
 
   const extension = req.file.mimetype.split('/')[1]
-  req.body.image = `public/uploads/posts/${
+  req.body.image = `/uploads/posts/${
     req.profile.username
   }-${Date.now()}.${extension}`
 
