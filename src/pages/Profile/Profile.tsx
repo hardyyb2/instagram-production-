@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import { connect } from 'react-redux'
 import { useLocation, useHistory } from 'react-router-dom'
@@ -18,9 +18,10 @@ import {
   getUserById,
   UserProps,
   toggleSnackBar,
+  userFeedUsers,
 } from '../../store/actions'
 import { IState } from '../../store/types'
-import { SnackBar, FollowButton } from '../../components'
+import { SnackBar, FollowButton, UsercardContainer } from '../../components'
 import useStyles from './Profile.styles'
 import { Spinner } from '../../UX'
 
@@ -36,6 +37,11 @@ interface IProps {
   getPostByUserIdConnect: (userId: string) => void
   getUserByIdConnect: (userId: string) => void
   toggleSnackBarConnect: (message: string) => void
+}
+
+interface UsersProps {
+  type: string
+  users: (string | userFeedUsers)[] | null
 }
 
 const Profile: React.FC<IProps> = ({
@@ -55,11 +61,17 @@ const Profile: React.FC<IProps> = ({
   const location = useLocation()
   const history = useHistory()
 
+  const [users, setUsers] = useState<UsersProps>({
+    type: '',
+    users: null,
+  })
+  const [showUsers, setShowUsers] = useState(false)
+
   useLayoutEffect(() => {
     if (location.search) {
       const params = new URLSearchParams(location.search)
       const userid = params.get('userId')
-      if (userid) {
+      if (userid && selectedUser && userid !== selectedUser._id) {
         Promise.all([
           getPostByUserIdConnect(userid!),
           getUserByIdConnect(userid!),
@@ -75,7 +87,7 @@ const Profile: React.FC<IProps> = ({
         toggleSnackBarConnect('')
       }
     }
-  }, [location.search])
+  }, [location.search, selectedUser])
 
   const handleBackClick = () => history.goBack()
 
@@ -86,6 +98,25 @@ const Profile: React.FC<IProps> = ({
     })
 
   const handleEditProfile = () => history.push('/editprofile')
+
+  const handleFollowersClick = () => {
+    setUsers({ type: 'followers', users: user.followers })
+    setShowUsers(true)
+  }
+
+  // history.push({
+  //   pathname: '/users',
+  //   search: `type=followers&userId=${userId}`,
+  // })
+
+  const handleFollowingClick = () => {
+    setUsers({ type: 'following', users: user.following })
+    setShowUsers(true)
+  }
+  // history.push({
+  //   pathname: '/users',
+  //   search: `type=following&userId=${userId}`,
+  // })
 
   const findExistence = (userId: string) => {
     let payload = {
@@ -101,8 +132,18 @@ const Profile: React.FC<IProps> = ({
     return payload
   }
 
-  if (!postloading)
-    return (
+  const handleUsersClose = () => {
+    setShowUsers(false)
+  }
+
+  if (!postloading) {
+    return showUsers ? (
+      <UsercardContainer
+        users={users.users}
+        type={users.type}
+        handleClose={handleUsersClose}
+      />
+    ) : (
       <Grid container item xs={12} sm={12} className={classes.root}>
         <AppBar position='sticky' className={classes.appBar}>
           <IconButton
@@ -225,6 +266,7 @@ const Profile: React.FC<IProps> = ({
                   justify='center'
                   xs={4}
                   className={classes.statsContainer}
+                  onClick={handleFollowersClick}
                 >
                   <Grid item className={classes.statsNumber}>
                     {selectedUser.followers.length}
@@ -240,6 +282,7 @@ const Profile: React.FC<IProps> = ({
                   justify='center'
                   xs={4}
                   className={classes.statsContainer}
+                  onClick={handleFollowingClick}
                 >
                   <Grid item className={classes.statsNumber}>
                     {selectedUser.following.length}
@@ -351,7 +394,7 @@ const Profile: React.FC<IProps> = ({
         </Grid>
       </Grid>
     )
-  else return <Spinner />
+  } else return <Spinner />
 }
 
 const mapStateToProps = (state: IState) => {

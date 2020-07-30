@@ -9,8 +9,8 @@ import { IState } from '../types'
 export interface UserProps {
   avatar: string
   account_created: string
-  following: string[]
-  followers: string[]
+  following: (userFeedUsers | string)[]
+  followers: (userFeedUsers | string)[]
   _id: string
   username: string
   email: string
@@ -234,10 +234,10 @@ export const updateUser = (user: updateUserObjProps): any => async (
   try {
     const response = await apiClient().put(`/user`, objectToFormData(user))
     const { data } = response.data
+    dispatch(updatedUser(data))
+    dispatch(setUserById(data))
     return new Promise((resolve, reject) => {
-      dispatch(updatedUser(data))
       resolve({ success: true })
-      return data
     })
   } catch (err) {
     if (err.response === undefined)

@@ -108,6 +108,7 @@ const App: React.FC<IProps> = ({
             isAuthenticated={isAuthenticated}
             isVerifying={isVerifying}
           />
+
           <PublicRoute path='/login' exact={true} component={Login} />
           <PublicRoute path='/signup' exact={true} component={Signup} />
           <PublicRoute path='/' exact component={Login} />
