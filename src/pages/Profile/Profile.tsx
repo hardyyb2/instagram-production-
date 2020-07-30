@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import { connect } from 'react-redux'
 import { useLocation, useHistory } from 'react-router-dom'
-import { find } from 'lodash'
+import { find, get } from 'lodash'
 import { Grid, IconButton, Typography, AppBar, Button } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
@@ -72,7 +72,7 @@ const Profile: React.FC<IProps> = ({
     if (location.search) {
       const params = new URLSearchParams(location.search)
       const userid = params.get('userId')
-      if (userid && selectedUser && userid !== selectedUser._id) {
+      if (userid && userid !== get(selectedUser, '_id')) {
         Promise.all([
           getPostByUserIdConnect(userid!),
           getUserByIdConnect(userid!),
