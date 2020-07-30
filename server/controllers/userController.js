@@ -198,14 +198,14 @@ const addFollower = asyncHandler(async (req, res, next) => {
   send(res, 201, updatedUser)
 })
 
-const removeFollowing = asyncHandler(async (req, res, next) => {
+const removeFollower = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
   await User.findByIdAndUpdate(
     otherId,
     {
       $pull: {
-        following: ownId,
+        followers: ownId,
       },
     },
     {
@@ -215,14 +215,14 @@ const removeFollowing = asyncHandler(async (req, res, next) => {
   next()
 })
 
-const removeFollower = asyncHandler(async (req, res, next) => {
+const removeFollowing = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
   const updatedUser = await User.findByIdAndUpdate(
     ownId,
     {
       $pull: {
-        followers: otherId,
+        following: otherId,
       },
     },
     {

@@ -88,7 +88,7 @@ const Profile: React.FC<IProps> = ({
         toggleSnackBarConnect('')
       }
     }
-  }, [location.search, selectedUser])
+  }, [location.search, selectedUser, user])
 
   const handleBackClick = () => history.goBack()
 

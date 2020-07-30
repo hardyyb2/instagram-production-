@@ -61,7 +61,7 @@ export interface updateUserProps {
   user: updateUserObjProps
 }
 
-export interface followUserObj {
+export interface addFollowerObj {
   userId: string
   follow: boolean
 }
@@ -248,7 +248,7 @@ export const updateUser = (user: updateUserObjProps): any => async (
   }
 }
 
-export const requestFollow = (payload: followUserObj) => async (
+export const requestFollow = (payload: addFollowerObj) => async (
   dispatch: Dispatch<UserActions, {}, any>,
   getState: () => IState
 ) => {
@@ -283,7 +283,7 @@ export const requestFollow = (payload: followUserObj) => async (
   }
 }
 
-export const followUser = (payload: followUserObj) => async (
+export const addFollower = (payload: addFollowerObj) => async (
   dispatch: Dispatch<UserActions, {}, any>,
   getState: () => IState
 ) => {
@@ -296,17 +296,17 @@ export const followUser = (payload: followUserObj) => async (
       `/user/${follow ? 'follow' : 'unfollow'}/${userId}`
     )
     const { data } = response.data
-    if (get(getState(), 'user.getUser._id') === userId) {
+    if (get(getState(), 'user.getUser._id') === userId && !follow) {
       const newUser = Object.assign({}, getState().user.getUser)
-      follow
-        ? newUser.followers.push(myId)
-        : newUser.followers.includes(myId)
+      newUser.followers.includes(myId)
         ? newUser.followers.pop(myId)
         : newUser.followers.splice(
             findIndex(newUser.followers, ['_id', myId]),
             1
           )
       dispatch(setUserById(newUser))
+    } else {
+      dispatch(setUserById(data))
     }
     dispatch(updatedUser(data))
     return data

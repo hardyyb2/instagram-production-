@@ -31,6 +31,7 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
   const handleAddPostClick = () => {
     if (location.pathname !== '/addpost') history.push('/addpost')
   }
+
   const handleProfileClick = () => {
     if (location.pathname !== '/profile' || !location.search.includes(userId))
       history.replace({
@@ -39,7 +40,9 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
       })
   }
 
-  const handleActivityClick = () => {}
+  const handleActivityClick = () => {
+    if (location.pathname !== '/activity') history.push('/activity')
+  }
 
   return (
     <Grid
@@ -67,11 +70,7 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
       </Grid>
 
       <Grid item container xs={2} className={classes.container}>
-        <Button
-          onClick={handleActivityClick}
-          className={classes.button}
-          disabled
-        >
+        <Button onClick={handleActivityClick} className={classes.button}>
           <FavoriteIcon fontSize='large' />
         </Button>
       </Grid>

@@ -1,10 +1,16 @@
 import React from 'react'
+import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import { connect } from 'react-redux'
 import { Grid, AppBar, IconButton, Typography } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 import { IState } from '../../store/types'
-import { userFeedUsers } from '../../store/actions'
+import {
+  userFeedUsers,
+  UserActions,
+  addFollowerObj,
+  addFollower,
+} from '../../store/actions'
 
 import { UserCard } from '..'
 import useStyles from './UsercardContainer.styles'
@@ -12,14 +18,29 @@ import useStyles from './UsercardContainer.styles'
 interface IProps {
   users: (string | userFeedUsers)[] | null
   type: string
+  showAcceptButton?: boolean
+  addFollowerConnect: (payload: addFollowerObj) => void
   handleClose: () => void
 }
 
-const UsercardContainer: React.FC<IProps> = ({ users, type, handleClose }) => {
+const UsercardContainer: React.FC<IProps> = ({
+  users,
+  type,
+  showAcceptButton,
+  addFollowerConnect,
+  handleClose,
+}) => {
   const classes = useStyles()
 
   const handleBackClick = () => {
     handleClose()
+  }
+
+  const handleAcceptRequest = (userId: string) => {
+    addFollowerConnect({
+      userId,
+      follow: true,
+    })
   }
 
   return (
@@ -47,7 +68,11 @@ const UsercardContainer: React.FC<IProps> = ({ users, type, handleClose }) => {
         </AppBar>
       </Grid>
       <Grid container item xs={12} sm={12} className={classes.body}>
-        <UserCard users={users} />
+        <UserCard
+          users={users}
+          showAcceptButton={showAcceptButton}
+          handleAcceptRequest={handleAcceptRequest}
+        />
       </Grid>
     </Grid>
   )
@@ -59,4 +84,11 @@ const mapStateToProps = (state: IState) => {
   }
 }
 
-export default connect(mapStateToProps)(UsercardContainer)
+const mapDispatchToProps = (dispatch: Dispatch<UserActions, {}, any>) => {
+  return {
+    addFollowerConnect: (payload: addFollowerObj) =>
+      dispatch(addFollower(payload)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UsercardContainer)

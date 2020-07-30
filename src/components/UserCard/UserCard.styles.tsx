@@ -18,7 +18,18 @@ export default makeStyles((theme: Theme) => ({
   },
   username: {
     paddingLeft: '12px',
+    paddingRight: '12px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     fontWeight: 'bold',
     fontSize: '1.2rem',
+  },
+  acceptButton: {
+    background: `linear-gradient(to right, ${theme.palette.secondary.dark},${theme.palette.secondary.main})`,
+    borderRadius: '6px',
+    width: '100%',
+    color: theme.palette.primary.main,
+    textTransform: 'capitalize',
+    fontWeight: 'bolder',
   },
 }))

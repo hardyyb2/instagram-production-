@@ -31,7 +31,7 @@ router.route('/request/:id').put(addRequested, addRequesting)
 router.route('/removerequest/:id').put(removeRequested, removeRequesting)
 
 router.route('/follow/:id').put(addFollowing, addFollower)
-router.route('/unfollow/:id').put(removeFollowing, removeFollower)
+router.route('/unfollow/:id').put(removeFollower, removeFollowing)
 
 router.route('/all').get(getAllUsers)
 
