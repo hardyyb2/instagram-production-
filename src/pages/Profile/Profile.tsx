@@ -68,6 +68,7 @@ const Profile: React.FC<IProps> = ({
   const [showUsers, setShowUsers] = useState(false)
 
   useLayoutEffect(() => {
+    setShowUsers(false)
     if (location.search) {
       const params = new URLSearchParams(location.search)
       const userid = params.get('userId')
