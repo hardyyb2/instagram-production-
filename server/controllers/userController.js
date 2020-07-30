@@ -90,6 +90,74 @@ const updateUser = asyncHandler(async (req, res, next) => {
   send(res, 201, updatedUser)
 })
 
+const addRequested = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  await User.findByIdAndUpdate(
+    otherId,
+    {
+      $push: {
+        requested: ownId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
+  next()
+})
+
+const addRequesting = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  const updatedUser = await User.findByIdAndUpdate(
+    ownId,
+    {
+      $push: {
+        requesting: otherId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
+  send(res, 201, updatedUser)
+})
+
+const removeRequested = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  await User.findByIdAndUpdate(
+    otherId,
+    {
+      $pull: {
+        requested: ownId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
+  next()
+})
+
+const removeRequesting = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  const updatedUser = await User.findByIdAndUpdate(
+    ownId,
+    {
+      $pull: {
+        requesting: otherId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
+  send(res, 201, updatedUser)
+})
+
 const addFollower = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
@@ -176,8 +244,12 @@ module.exports = {
   resizeAvatar,
   updateUser,
   getUserDetails,
+  addRequested,
+  addRequesting,
   addFollower,
   addFollowing,
+  removeRequested,
+  removeRequesting,
   removeFollower,
   removeFollowing,
   getUserFeed,

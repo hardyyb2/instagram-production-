@@ -9,6 +9,7 @@
 - Change Password
 - Secure Post Deletion
 - Refresh JWT
+- reduce follow and requested to one function
 
 ## FrontEnd
 

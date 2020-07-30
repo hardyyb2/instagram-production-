@@ -11,6 +11,8 @@ export interface UserProps {
   account_created: string
   following: (userFeedUsers | string)[]
   followers: (userFeedUsers | string)[]
+  requesting: (userFeedUsers | string)[]
+  requested: (userFeedUsers | string)[]
   _id: string
   username: string
   email: string
