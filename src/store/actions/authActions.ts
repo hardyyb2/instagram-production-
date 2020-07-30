@@ -182,7 +182,8 @@ export const logoutUser = () => async (
 ) => {
   dispatch(requestLogin())
   //for now just clear the jwt token from localstorage, later add blacklist on server
-  localStorage.removeItem('token')
+  // localStorage.removeItem('token')
+  localStorage.clear()
   dispatch(unauthenticated())
 }
 

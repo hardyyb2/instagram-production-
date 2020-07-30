@@ -19,9 +19,15 @@ import {
   UserProps,
   toggleSnackBar,
   userFeedUsers,
+  logoutUser,
 } from '../../store/actions'
 import { IState } from '../../store/types'
-import { SnackBar, FollowButton, UsercardContainer } from '../../components'
+import {
+  SnackBar,
+  FollowButton,
+  UsercardContainer,
+  Menu as SMenu,
+} from '../../components'
 import useStyles from './Profile.styles'
 import { Spinner } from '../../UX'
 
@@ -37,6 +43,7 @@ interface IProps {
   getPostByUserIdConnect: (userId: string) => void
   getUserByIdConnect: (userId: string) => void
   toggleSnackBarConnect: (message: string) => void
+  logoutUserConnect: () => void
 }
 
 interface UsersProps {
@@ -56,11 +63,13 @@ const Profile: React.FC<IProps> = ({
   getPostByUserIdConnect,
   getUserByIdConnect,
   toggleSnackBarConnect,
+  logoutUserConnect,
 }) => {
   const classes = useStyles()
   const location = useLocation()
   const history = useHistory()
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [users, setUsers] = useState<UsersProps>({
     type: '',
     users: null,
@@ -105,19 +114,10 @@ const Profile: React.FC<IProps> = ({
     setShowUsers(true)
   }
 
-  // history.push({
-  //   pathname: '/users',
-  //   search: `type=followers&userId=${userId}`,
-  // })
-
   const handleFollowingClick = () => {
     setUsers({ type: 'following', users: user.following })
     setShowUsers(true)
   }
-  // history.push({
-  //   pathname: '/users',
-  //   search: `type=following&userId=${userId}`,
-  // })
 
   const findExistence = (userId: string) => {
     let payload = {
@@ -136,6 +136,25 @@ const Profile: React.FC<IProps> = ({
   const handleUsersClose = () => {
     setShowUsers(false)
   }
+
+  const handleLogout = () => {
+    logoutUserConnect()
+  }
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => setAnchorEl(null)
+
+  const menuItems = [
+    {
+      title: 'Logout',
+      icon: 'logout',
+      color: 'red',
+      handleClick: handleLogout,
+    },
+  ]
 
   if (!postloading) {
     return showUsers ? (
@@ -175,9 +194,15 @@ const Profile: React.FC<IProps> = ({
             className={classes.message}
             color='inherit'
             aria-label='message'
+            onClick={handleMenuClick}
           >
             <MoreHorizIcon fontSize='large' />
           </IconButton>
+          <SMenu
+            anchorEl={anchorEl}
+            handleClose={handleMenuClose}
+            menuItems={menuItems}
+          />
         </AppBar>
         <Grid container className={classes.body}>
           <Grid container item className={classes.details} direction='row'>
@@ -422,6 +447,7 @@ const mapDispatchToProps = (dispatch: Dispatch<PostActions, {}, any>) => {
     getUserByIdConnect: (userId: string) => dispatch(getUserById(userId)),
     toggleSnackBarConnect: (message: string) =>
       dispatch(toggleSnackBar(message)),
+    logoutUserConnect: () => dispatch(logoutUser()),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
