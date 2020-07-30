@@ -30,8 +30,8 @@ router.route('/feed').get(getUserDetails, getUserFeed)
 router.route('/request/:id').put(addRequested, addRequesting)
 router.route('/removerequest/:id').put(removeRequested, removeRequesting)
 
-router.route('/follow/:id').put(addFollower, addFollowing)
-router.route('/unfollow/:id').put(removeFollower, removeFollowing)
+router.route('/follow/:id').put(addFollowing, addFollower)
+router.route('/unfollow/:id').put(removeFollowing, removeFollower)
 
 router.route('/all').get(getAllUsers)
 

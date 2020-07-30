@@ -10,6 +10,7 @@
 - Secure Post Deletion
 - Refresh JWT
 - reduce follow and requested to one function
+- remove posts and avatars of deleted users
 
 ## FrontEnd
 

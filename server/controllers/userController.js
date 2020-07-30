@@ -158,30 +158,10 @@ const removeRequesting = asyncHandler(async (req, res, next) => {
   send(res, 201, updatedUser)
 })
 
-const addFollower = asyncHandler(async (req, res, next) => {
-  const otherId = req.params.id
-  const ownId = req.user.id
-  await User.findByIdAndUpdate(
-    ownId,
-    {
-      $push: {
-        followers: otherId,
-      },
-      $pull: {
-        requested: otherId,
-      },
-    },
-    {
-      new: true,
-    }
-  )
-  next()
-})
-
 const addFollowing = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
-  const updatedUser = await User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     otherId,
     {
       $push: {
@@ -195,17 +175,37 @@ const addFollowing = asyncHandler(async (req, res, next) => {
       new: true,
     }
   )
+  next()
+})
+
+const addFollower = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  const updatedUser = await User.findByIdAndUpdate(
+    ownId,
+    {
+      $push: {
+        followers: otherId,
+      },
+      $pull: {
+        requested: otherId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
   send(res, 201, updatedUser)
 })
 
-const removeFollower = asyncHandler(async (req, res, next) => {
+const removeFollowing = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
   await User.findByIdAndUpdate(
     otherId,
     {
       $pull: {
-        followers: ownId,
+        following: ownId,
       },
     },
     {
@@ -215,14 +215,14 @@ const removeFollower = asyncHandler(async (req, res, next) => {
   next()
 })
 
-const removeFollowing = asyncHandler(async (req, res, next) => {
+const removeFollower = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
   const updatedUser = await User.findByIdAndUpdate(
     ownId,
     {
       $pull: {
-        following: otherId,
+        followers: otherId,
       },
     },
     {
