@@ -317,6 +317,10 @@ const Profile: React.FC<IProps> = ({
                   !!find(user.following, ['_id', selectedUser._id]) ||
                   user.following.includes(selectedUser._id)
                 }
+                requesting={
+                  !!find(user.requesting, ['_id', selectedUser._id]) ||
+                  user.requesting.includes(selectedUser._id)
+                }
                 payload={findExistence(selectedUser._id)}
               />
               <IconButton className={classes.messageButton}>
@@ -370,7 +374,7 @@ const Profile: React.FC<IProps> = ({
               Array(9)
                 .fill(undefined)
                 .map((arr, index) => (
-                  <Grid item xs={4} className={classes.postWrapper}>
+                  <Grid item xs={4} className={classes.postWrapper} key={index}>
                     <Skeleton
                       key={index}
                       className={classes.skeleton}

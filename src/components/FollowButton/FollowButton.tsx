@@ -6,6 +6,7 @@ import { Button } from '@material-ui/core'
 import {
   UserActions,
   followUser,
+  requestFollow,
   followUserObj,
 } from '../../store/actions/userActions'
 import useStyles from './FollowButton.styles'
@@ -14,32 +15,35 @@ interface IProps {
   payload: followUserObj
   design: any
   follows: boolean
-  followUserConnect: (payload: followUserObj) => void
+  requesting: boolean
+  requestFollowConnect: (payload: followUserObj) => void
 }
 
 const FollowButton: React.FC<IProps> = ({
   payload,
   design,
   follows,
-  followUserConnect,
+  requesting,
+  requestFollowConnect,
 }) => {
   const classes = useStyles()
-  let classFollow = follows ? `${classes.following} ${design} ` : `${design}`
+  let classFollow =
+    follows || requesting ? `${classes.following} ${design} ` : `${design}`
 
   const handleFollowUser = () => {
-    followUserConnect(payload)
+    requestFollowConnect(payload)
   }
   return (
     <Button onClick={handleFollowUser} className={classFollow}>
-      {follows ? 'Following' : 'Follow'}
+      {follows ? 'Following' : requesting ? 'Requested' : 'Follow'}
     </Button>
   )
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<UserActions, {}, any>) => {
   return {
-    followUserConnect: (payload: followUserObj) =>
-      dispatch(followUser(payload)),
+    requestFollowConnect: (payload: followUserObj) =>
+      dispatch(requestFollow(payload)),
   }
 }
 

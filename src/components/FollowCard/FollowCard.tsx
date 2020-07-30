@@ -84,6 +84,10 @@ const FollowCard: React.FC<IProps> = ({ userFeed, user }) => {
                     <FollowButton
                       payload={findExistence(userF._id)}
                       design={classes.followButton}
+                      requesting={
+                        !!find(user.requesting, ['_id', userF._id]) ||
+                        user.requesting.includes(userF._id)
+                      }
                       follows={
                         !!find(user.following, ['_id', userF._id]) ||
                         user.following.includes(userF._id)

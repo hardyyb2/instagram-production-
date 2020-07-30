@@ -33,7 +33,7 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
   }
   const handleProfileClick = () => {
     if (location.pathname !== '/profile' || !location.search.includes(userId))
-      history.push({
+      history.replace({
         pathname: '/profile',
         search: `user=${username}&userId=${userId}`,
       })

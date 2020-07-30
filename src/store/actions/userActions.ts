@@ -248,6 +248,41 @@ export const updateUser = (user: updateUserObjProps): any => async (
   }
 }
 
+export const requestFollow = (payload: followUserObj) => async (
+  dispatch: Dispatch<UserActions, {}, any>,
+  getState: () => IState
+) => {
+  dispatch(requestUser())
+  try {
+    const follow = get(payload, 'follow', true)
+    const userId = get(payload, 'userId', '')
+    const myId = getState().user.user._id
+    const response = await apiClient().put(
+      `/user/${follow ? 'request' : 'removerequest'}/${userId}`
+    )
+    const { data } = response.data
+    if (get(getState(), 'user.getUser._id') === userId) {
+      const newUser = Object.assign({}, getState().user.getUser)
+      follow
+        ? newUser.requested.push(myId)
+        : newUser.requested.includes(myId)
+        ? newUser.requested.pop(myId)
+        : newUser.requested.splice(
+            findIndex(newUser.requested, ['_id', myId]),
+            1
+          )
+      dispatch(setUserById(newUser))
+    }
+    dispatch(updatedUser(data))
+    return data
+  } catch (err) {
+    console.log(err)
+    if (err.response === undefined)
+      dispatch(getUserError('Something went wrong'))
+    dispatch(getUserError(err.response.data.error))
+  }
+}
+
 export const followUser = (payload: followUserObj) => async (
   dispatch: Dispatch<UserActions, {}, any>,
   getState: () => IState
