@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import { connect } from 'react-redux'
 import { useLocation, useHistory } from 'react-router-dom'
-import { find } from 'lodash'
+import { find, get } from 'lodash'
 import { Grid, IconButton, Typography, AppBar, Button } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
@@ -19,9 +19,15 @@ import {
   UserProps,
   toggleSnackBar,
   userFeedUsers,
+  logoutUser,
 } from '../../store/actions'
 import { IState } from '../../store/types'
-import { SnackBar, FollowButton, UsercardContainer } from '../../components'
+import {
+  SnackBar,
+  FollowButton,
+  UsercardContainer,
+  Menu as SMenu,
+} from '../../components'
 import useStyles from './Profile.styles'
 import { Spinner } from '../../UX'
 
@@ -37,6 +43,7 @@ interface IProps {
   getPostByUserIdConnect: (userId: string) => void
   getUserByIdConnect: (userId: string) => void
   toggleSnackBarConnect: (message: string) => void
+  logoutUserConnect: () => void
 }
 
 interface UsersProps {
@@ -56,11 +63,13 @@ const Profile: React.FC<IProps> = ({
   getPostByUserIdConnect,
   getUserByIdConnect,
   toggleSnackBarConnect,
+  logoutUserConnect,
 }) => {
   const classes = useStyles()
   const location = useLocation()
   const history = useHistory()
 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [users, setUsers] = useState<UsersProps>({
     type: '',
     users: null,
@@ -72,7 +81,7 @@ const Profile: React.FC<IProps> = ({
     if (location.search) {
       const params = new URLSearchParams(location.search)
       const userid = params.get('userId')
-      if (userid && selectedUser && userid !== selectedUser._id) {
+      if (userid && userid !== get(selectedUser, '_id')) {
         Promise.all([
           getPostByUserIdConnect(userid!),
           getUserByIdConnect(userid!),
@@ -88,7 +97,7 @@ const Profile: React.FC<IProps> = ({
         toggleSnackBarConnect('')
       }
     }
-  }, [location.search, selectedUser])
+  }, [location.search, selectedUser, user])
 
   const handleBackClick = () => history.goBack()
 
@@ -105,19 +114,10 @@ const Profile: React.FC<IProps> = ({
     setShowUsers(true)
   }
 
-  // history.push({
-  //   pathname: '/users',
-  //   search: `type=followers&userId=${userId}`,
-  // })
-
   const handleFollowingClick = () => {
     setUsers({ type: 'following', users: user.following })
     setShowUsers(true)
   }
-  // history.push({
-  //   pathname: '/users',
-  //   search: `type=following&userId=${userId}`,
-  // })
 
   const findExistence = (userId: string) => {
     let payload = {
@@ -136,6 +136,25 @@ const Profile: React.FC<IProps> = ({
   const handleUsersClose = () => {
     setShowUsers(false)
   }
+
+  const handleLogout = () => {
+    logoutUserConnect()
+  }
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => setAnchorEl(null)
+
+  const menuItems = [
+    {
+      title: 'Logout',
+      icon: 'logout',
+      color: 'red',
+      handleClick: handleLogout,
+    },
+  ]
 
   if (!postloading) {
     return showUsers ? (
@@ -175,9 +194,15 @@ const Profile: React.FC<IProps> = ({
             className={classes.message}
             color='inherit'
             aria-label='message'
+            onClick={handleMenuClick}
           >
             <MoreHorizIcon fontSize='large' />
           </IconButton>
+          <SMenu
+            anchorEl={anchorEl}
+            handleClose={handleMenuClose}
+            menuItems={menuItems}
+          />
         </AppBar>
         <Grid container className={classes.body}>
           <Grid container item className={classes.details} direction='row'>
@@ -317,6 +342,10 @@ const Profile: React.FC<IProps> = ({
                   !!find(user.following, ['_id', selectedUser._id]) ||
                   user.following.includes(selectedUser._id)
                 }
+                requesting={
+                  !!find(user.requesting, ['_id', selectedUser._id]) ||
+                  user.requesting.includes(selectedUser._id)
+                }
                 payload={findExistence(selectedUser._id)}
               />
               <IconButton className={classes.messageButton}>
@@ -370,7 +399,7 @@ const Profile: React.FC<IProps> = ({
               Array(9)
                 .fill(undefined)
                 .map((arr, index) => (
-                  <Grid item xs={4} className={classes.postWrapper}>
+                  <Grid item xs={4} className={classes.postWrapper} key={index}>
                     <Skeleton
                       key={index}
                       className={classes.skeleton}
@@ -418,6 +447,7 @@ const mapDispatchToProps = (dispatch: Dispatch<PostActions, {}, any>) => {
     getUserByIdConnect: (userId: string) => dispatch(getUserById(userId)),
     toggleSnackBarConnect: (message: string) =>
       dispatch(toggleSnackBar(message)),
+    logoutUserConnect: () => dispatch(logoutUser()),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Menu, MenuItem, Button } from '@material-ui/core'
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 import useStyles from './Menu.styles'
 
@@ -24,6 +25,8 @@ const SMenu: React.FC<IProps> = ({ anchorEl, handleClose, menuItems }) => {
     switch (icon.toLowerCase()) {
       case 'delete':
         return <DeleteOutlineIcon />
+      case 'logout':
+        return <ExitToAppIcon />
       default:
         return <DeleteOutlineIcon />
     }

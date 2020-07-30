@@ -1,5 +1,5 @@
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
-import { get, find, remove, findIndex } from 'lodash'
+import { get, findIndex } from 'lodash'
 
 import apiClient from '../../apiInstance'
 import * as constants from '../constants'
@@ -11,6 +11,8 @@ export interface UserProps {
   account_created: string
   following: (userFeedUsers | string)[]
   followers: (userFeedUsers | string)[]
+  requesting: (userFeedUsers | string)[]
+  requested: (userFeedUsers | string)[]
   _id: string
   username: string
   email: string
@@ -59,7 +61,7 @@ export interface updateUserProps {
   user: updateUserObjProps
 }
 
-export interface followUserObj {
+export interface addFollowerObj {
   userId: string
   follow: boolean
 }
@@ -246,7 +248,42 @@ export const updateUser = (user: updateUserObjProps): any => async (
   }
 }
 
-export const followUser = (payload: followUserObj) => async (
+export const requestFollow = (payload: addFollowerObj) => async (
+  dispatch: Dispatch<UserActions, {}, any>,
+  getState: () => IState
+) => {
+  dispatch(requestUser())
+  try {
+    const follow = get(payload, 'follow', true)
+    const userId = get(payload, 'userId', '')
+    const myId = getState().user.user._id
+    const response = await apiClient().put(
+      `/user/${follow ? 'request' : 'removerequest'}/${userId}`
+    )
+    const { data } = response.data
+    if (get(getState(), 'user.getUser._id') === userId) {
+      const newUser = Object.assign({}, getState().user.getUser)
+      follow
+        ? newUser.requested.push(myId)
+        : newUser.requested.includes(myId)
+        ? newUser.requested.pop(myId)
+        : newUser.requested.splice(
+            findIndex(newUser.requested, ['_id', myId]),
+            1
+          )
+      dispatch(setUserById(newUser))
+    }
+    dispatch(updatedUser(data))
+    return data
+  } catch (err) {
+    console.log(err)
+    if (err.response === undefined)
+      dispatch(getUserError('Something went wrong'))
+    dispatch(getUserError(err.response.data.error))
+  }
+}
+
+export const addFollower = (payload: addFollowerObj) => async (
   dispatch: Dispatch<UserActions, {}, any>,
   getState: () => IState
 ) => {
@@ -259,17 +296,17 @@ export const followUser = (payload: followUserObj) => async (
       `/user/${follow ? 'follow' : 'unfollow'}/${userId}`
     )
     const { data } = response.data
-    if (get(getState(), 'user.getUser._id') === userId) {
+    if (get(getState(), 'user.getUser._id') === userId && !follow) {
       const newUser = Object.assign({}, getState().user.getUser)
-      follow
-        ? newUser.followers.push(myId)
-        : newUser.followers.includes(myId)
+      newUser.followers.includes(myId)
         ? newUser.followers.pop(myId)
         : newUser.followers.splice(
             findIndex(newUser.followers, ['_id', myId]),
             1
           )
       dispatch(setUserById(newUser))
+    } else {
+      dispatch(setUserById(data))
     }
     dispatch(updatedUser(data))
     return data

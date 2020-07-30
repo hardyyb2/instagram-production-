@@ -8,8 +8,12 @@ const {
   updateUser,
   uploadAvatar,
   resizeAvatar,
+  addRequested,
+  addRequesting,
   addFollower,
   addFollowing,
+  removeRequested,
+  removeRequesting,
   removeFollower,
   removeFollowing,
   getUserFeed,
@@ -23,7 +27,10 @@ router
 
 router.route('/feed').get(getUserDetails, getUserFeed)
 
-router.route('/follow/:id').put(addFollower, addFollowing)
+router.route('/request/:id').put(addRequested, addRequesting)
+router.route('/removerequest/:id').put(removeRequested, removeRequesting)
+
+router.route('/follow/:id').put(addFollowing, addFollower)
 router.route('/unfollow/:id').put(removeFollower, removeFollowing)
 
 router.route('/all').get(getAllUsers)

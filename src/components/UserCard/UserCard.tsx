@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid } from '@material-ui/core'
+import { Grid, Button } from '@material-ui/core'
 
 import {
   HeaderImageContainer,
@@ -11,9 +11,15 @@ import { useHistory } from 'react-router-dom'
 
 interface IProps {
   users: (string | userFeedUsers)[] | null
+  showAcceptButton?: boolean
+  handleAcceptRequest?: (userId: string) => void
 }
 
-const UserCard: React.FC<IProps> = ({ users }) => {
+const UserCard: React.FC<IProps> = ({
+  users,
+  showAcceptButton,
+  handleAcceptRequest,
+}) => {
   const classes = useStyles()
   const history = useHistory()
 
@@ -45,12 +51,22 @@ const UserCard: React.FC<IProps> = ({ users }) => {
               <Grid
                 container
                 item
-                xs={8}
+                xs={showAcceptButton ? 8 : 6}
                 className={classes.username}
                 onClick={() => handleUserClick(user)}
               >
                 {user.username}
               </Grid>
+              {showAcceptButton && !!handleAcceptRequest && (
+                <Grid container item xs={2}>
+                  <Button
+                    onClick={() => handleAcceptRequest(user._id)}
+                    className={classes.acceptButton}
+                  >
+                    Accept
+                  </Button>
+                </Grid>
+              )}
             </Grid>
           )
         )}

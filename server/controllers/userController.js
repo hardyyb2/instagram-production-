@@ -90,14 +90,14 @@ const updateUser = asyncHandler(async (req, res, next) => {
   send(res, 201, updatedUser)
 })
 
-const addFollower = asyncHandler(async (req, res, next) => {
+const addRequested = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
   await User.findByIdAndUpdate(
     otherId,
     {
       $push: {
-        followers: ownId,
+        requested: ownId,
       },
     },
     {
@@ -107,14 +107,88 @@ const addFollower = asyncHandler(async (req, res, next) => {
   next()
 })
 
-const addFollowing = asyncHandler(async (req, res, next) => {
+const addRequesting = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
   const updatedUser = await User.findByIdAndUpdate(
     ownId,
     {
       $push: {
-        following: otherId,
+        requesting: otherId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
+  send(res, 201, updatedUser)
+})
+
+const removeRequested = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  await User.findByIdAndUpdate(
+    otherId,
+    {
+      $pull: {
+        requested: ownId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
+  next()
+})
+
+const removeRequesting = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  const updatedUser = await User.findByIdAndUpdate(
+    ownId,
+    {
+      $pull: {
+        requesting: otherId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
+  send(res, 201, updatedUser)
+})
+
+const addFollowing = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  await User.findByIdAndUpdate(
+    otherId,
+    {
+      $push: {
+        following: ownId,
+      },
+      $pull: {
+        requesting: ownId,
+      },
+    },
+    {
+      new: true,
+    }
+  )
+  next()
+})
+
+const addFollower = asyncHandler(async (req, res, next) => {
+  const otherId = req.params.id
+  const ownId = req.user.id
+  const updatedUser = await User.findByIdAndUpdate(
+    ownId,
+    {
+      $push: {
+        followers: otherId,
+      },
+      $pull: {
+        requested: otherId,
       },
     },
     {
@@ -176,8 +250,12 @@ module.exports = {
   resizeAvatar,
   updateUser,
   getUserDetails,
+  addRequested,
+  addRequesting,
   addFollower,
   addFollowing,
+  removeRequested,
+  removeRequesting,
   removeFollower,
   removeFollowing,
   getUserFeed,

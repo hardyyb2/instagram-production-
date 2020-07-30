@@ -41,6 +41,8 @@ const userSchema = new mongoose.Schema(
     },
     following: [{ type: ObjectId, ref: 'User' }],
     followers: [{ type: ObjectId, ref: 'User' }],
+    requesting: [{ type: ObjectId, ref: 'User' }],
+    requested: [{ type: ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,
@@ -74,6 +76,8 @@ userSchema.pre('save', async function save(next) {
 const autoPopulateFollowingAndFollowers = function (next) {
   this.populate('following', '_id username avatar')
   this.populate('followers', '_id username avatar')
+  this.populate('requesting', '_id username avatar')
+  this.populate('requested', '_id username avatar')
   next()
 }
 
