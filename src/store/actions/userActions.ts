@@ -235,6 +235,7 @@ export const updateUser = (user: updateUserObjProps): any => async (
 ) => {
   dispatch(requestUser())
   try {
+    console.log(user)
     const response = await apiClient().put(`/user`, objectToFormData(user))
     const { data } = response.data
     dispatch(updatedUser(data))
@@ -243,6 +244,7 @@ export const updateUser = (user: updateUserObjProps): any => async (
       resolve({ success: true })
     })
   } catch (err) {
+    console.log(err)
     if (err.response === undefined)
       dispatch(getUserError('Something went wrong'))
     dispatch(getUserError(err.response.data.error))
