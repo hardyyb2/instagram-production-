@@ -7,6 +7,7 @@ const ErrorResponse = require('../utils/errorResponse')
 const { send, avatarUploadOptions } = require('../utils/utils')
 const User = require('../database/models/User')
 const uploads = require('../utils/cloudinaryConfig')
+const { get } = require('lodash')
 
 const getUserDetails = asyncHandler(async (req, res, next) => {
   await User.findById(req.user.id)
@@ -66,10 +67,9 @@ const deleteUser = asyncHandler(async (req, res, next) => {
 const uploadAvatar = multer(avatarUploadOptions).single('avatar')
 
 const resizeAvatar = asyncHandler(async (req, res, next) => {
-  if (!req.file) {
+  if (!req.file || !get(req, 'file.originalname')) {
     return next()
   }
-
   const extension = req.file.mimetype.split('/')[1]
   req.body.avatar = `/uploads/avatars/${req.profile.username}.${extension}`
 
@@ -80,9 +80,11 @@ const resizeAvatar = asyncHandler(async (req, res, next) => {
 })
 
 const updateUser = asyncHandler(async (req, res, next) => {
-  const response = await uploads(`./public/${req.body.avatar}`)
-  req.body.avatar = response.url
-  fs.rmdirSync('./public/uploads', { recursive: true })
+  if (req.file && !!get(req, 'file.originalname')) {
+    const response = await uploads(`./public/${req.body.avatar}`)
+    req.body.avatar = response.url
+    fs.rmdirSync('./public/uploads', { recursive: true })
+  }
 
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,

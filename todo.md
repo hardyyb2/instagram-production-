@@ -2,6 +2,7 @@
 
 ## Backend
 
+- Separate route for avatar change
 - Requested feature
 - Stories
 - Messages
