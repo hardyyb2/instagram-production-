@@ -3,6 +3,8 @@ const { send, avatarUploadOptions } = require('../utils/utils')
 const Post = require('../database/models/Post')
 const multer = require('multer')
 const jimp = require('jimp')
+const uploads = require('../utils/cloudinaryConfig')
+const cloudinary = require('cloudinary').v2
 
 const uploadPost = multer(avatarUploadOptions).single('image')
 
@@ -19,12 +21,14 @@ const resizePost = asyncHandler(async (req, res, next) => {
   const image = await jimp.read(req.file.buffer)
   await image.resize(250, jimp.AUTO)
   await image.write(`./public/${req.body.image}`)
+
   next()
 })
 
 const addPost = asyncHandler(async (req, res, next) => {
   req.body.postedBy = req.user.id
-
+  const response = await uploads(`./public/${req.body.image}`)
+  req.body.image = response.url
   const post = new Post(req.body)
   const postData = await post.save()
 

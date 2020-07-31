@@ -1,9 +1,11 @@
 const asyncHandler = require('../middlewares/AsyncHandler')
 const ErrorResponse = require('../utils/errorResponse')
 const { send, avatarUploadOptions } = require('../utils/utils')
+const cloudinary = require('cloudinary').v2
 const User = require('../database/models/User')
 const multer = require('multer')
 const jimp = require('jimp')
+const uploads = require('../utils/cloudinaryConfig')
 
 const getUserDetails = asyncHandler(async (req, res, next) => {
   await User.findById(req.user.id)
@@ -77,6 +79,9 @@ const resizeAvatar = asyncHandler(async (req, res, next) => {
 })
 
 const updateUser = asyncHandler(async (req, res, next) => {
+  const response = await uploads(`./public/${req.body.avatar}`)
+  req.body.avatar = response.url
+
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,
     {
