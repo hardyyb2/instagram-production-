@@ -24,3 +24,7 @@
 - Replace only likes or comments and not whole post.
 - Add card sketeon in explore and svg for no users
 - Add invite when no user
+
+## bugs
+
+- complete reload on avatar change.

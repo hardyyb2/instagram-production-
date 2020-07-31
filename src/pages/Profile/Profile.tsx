@@ -54,7 +54,6 @@ interface UsersProps {
 const Profile: React.FC<IProps> = ({
   userId,
   user,
-  userloading,
   postloading,
   selectedUser,
   selectedUserPosts,
@@ -97,7 +96,7 @@ const Profile: React.FC<IProps> = ({
         toggleSnackBarConnect('')
       }
     }
-  }, [location.search, selectedUser, user])
+  }, [location.search, selectedUser, user.avatar])
 
   const handleBackClick = () => history.goBack()
 

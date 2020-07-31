@@ -235,7 +235,6 @@ export const updateUser = (user: updateUserObjProps): any => async (
 ) => {
   dispatch(requestUser())
   try {
-    console.log(user)
     const response = await apiClient().put(`/user`, objectToFormData(user))
     const { data } = response.data
     dispatch(updatedUser(data))
