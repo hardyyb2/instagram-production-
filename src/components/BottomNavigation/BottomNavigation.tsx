@@ -7,16 +7,23 @@ import PersonIcon from '@material-ui/icons/Person'
 import SearchIcon from '@material-ui/icons/Search'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import AddIcon from '@material-ui/icons/Add'
+import Badge from '@material-ui/core/Badge'
 
 import useStyles from './BottomNavigation.styles'
 import { IState } from '../../store/types'
+import { userFeedUsers } from '../../store/actions'
 
 interface IProps {
   username: string
   userId: string
+  requested: (string | userFeedUsers)[]
 }
 
-const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
+const BottomNavigation: React.FC<IProps> = ({
+  username,
+  userId,
+  requested,
+}) => {
   const history = useHistory()
   const location = useLocation()
   const classes = useStyles()
@@ -71,7 +78,13 @@ const BottomNavigation: React.FC<IProps> = ({ username, userId }) => {
 
       <Grid item container xs={2} className={classes.container}>
         <Button onClick={handleActivityClick} className={classes.button}>
-          <FavoriteIcon fontSize='large' />
+          <Badge
+            badgeContent={requested.length}
+            className={classes.badge}
+            color='secondary'
+          >
+            <FavoriteIcon fontSize='large' />
+          </Badge>
         </Button>
       </Grid>
 
@@ -88,6 +101,7 @@ const mapStateToProps = (state: IState) => {
   return {
     userId: state.user.user ? state.user.user._id : '',
     username: state.user.user ? state.user.user.username : '',
+    requested: state.user.user ? state.user.user.requested : '',
   }
 }
 

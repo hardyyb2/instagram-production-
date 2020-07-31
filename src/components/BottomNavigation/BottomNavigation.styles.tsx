@@ -20,4 +20,9 @@ export default makeStyles((theme: Theme) => ({
     borderRadius: '12px',
     boxShadow: `0 2px 8px rgba(0, 0, 0, 0.19), 0 3px 6px rgba(0, 0, 0, 0.23)`,
   },
+  badge: {
+    '& span': {
+      color: theme.palette.primary.main,
+    },
+  },
 }))
