@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Grid, Paper, IconButton, Button } from '@material-ui/core'
+import { motion } from 'framer-motion'
 
 import { theme } from '../../UX/UITheme/colors'
 
@@ -83,7 +84,7 @@ export const CardFooter = styled(Grid)`
   padding-bottom: 0px;
 `
 
-export const LikesContainer = styled(Grid)`
+export const LikesContainer = styled(motion.div)`
   display: flex;
 `
 export const CommentsNumberContainer = styled(Grid)`

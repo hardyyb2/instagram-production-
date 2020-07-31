@@ -4,6 +4,7 @@ import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineO
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import { motion } from 'framer-motion'
 
 import {
   CardContainer,
@@ -104,7 +105,7 @@ const Card: React.FC<IProps> = ({
             </CardImageWrapper>
           </CardImageContainer>
           <CardFooter container direction='row' justify='flex-start'>
-            <LikesContainer>
+            <LikesContainer whileTap={{ scale: 1.2 }}>
               <CardIconButton
                 onClick={handleLikeClick}
                 aria-label='like'

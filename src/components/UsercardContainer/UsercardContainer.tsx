@@ -10,6 +10,7 @@ import {
   UserActions,
   addFollowerObj,
   addFollower,
+  requestFollow,
 } from '../../store/actions'
 
 import { UserCard } from '..'
@@ -20,6 +21,7 @@ interface IProps {
   type: string
   showAcceptButton?: boolean
   addFollowerConnect: (payload: addFollowerObj) => void
+  requestFollowConnect: (payload: addFollowerObj) => void
   handleClose: () => void
 }
 
@@ -28,6 +30,7 @@ const UsercardContainer: React.FC<IProps> = ({
   type,
   showAcceptButton,
   addFollowerConnect,
+  requestFollowConnect,
   handleClose,
 }) => {
   const classes = useStyles()
@@ -40,6 +43,14 @@ const UsercardContainer: React.FC<IProps> = ({
     addFollowerConnect({
       userId,
       follow: true,
+    })
+  }
+
+  const handleRejectRequest = (userId: string) => {
+    requestFollowConnect({
+      userId,
+      follow: false,
+      removeRequest: true,
     })
   }
 
@@ -72,6 +83,7 @@ const UsercardContainer: React.FC<IProps> = ({
           users={users}
           showAcceptButton={showAcceptButton}
           handleAcceptRequest={handleAcceptRequest}
+          handleRejectRequest={handleRejectRequest}
         />
       </Grid>
     </Grid>
@@ -88,6 +100,8 @@ const mapDispatchToProps = (dispatch: Dispatch<UserActions, {}, any>) => {
   return {
     addFollowerConnect: (payload: addFollowerObj) =>
       dispatch(addFollower(payload)),
+    requestFollowConnect: (payload: addFollowerObj) =>
+      dispatch(requestFollow(payload)),
   }
 }
 

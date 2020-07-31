@@ -1,5 +1,7 @@
 import React from 'react'
-import { Grid, Button } from '@material-ui/core'
+import { useHistory } from 'react-router-dom'
+import { Grid, Button, IconButton } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
 
 import {
   HeaderImageContainer,
@@ -7,18 +9,19 @@ import {
 } from '../../SCcomponents/Card/Card.styles'
 import { userFeedUsers } from '../../store/actions'
 import useStyles from './UserCard.styles'
-import { useHistory } from 'react-router-dom'
 
 interface IProps {
   users: (string | userFeedUsers)[] | null
   showAcceptButton?: boolean
   handleAcceptRequest?: (userId: string) => void
+  handleRejectRequest?: (userId: string) => void
 }
 
 const UserCard: React.FC<IProps> = ({
   users,
   showAcceptButton,
   handleAcceptRequest,
+  handleRejectRequest,
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -51,22 +54,37 @@ const UserCard: React.FC<IProps> = ({
               <Grid
                 container
                 item
-                xs={showAcceptButton ? 8 : 6}
+                xs={showAcceptButton ? 6 : 8}
                 className={classes.username}
                 onClick={() => handleUserClick(user)}
               >
                 {user.username}
               </Grid>
-              {showAcceptButton && !!handleAcceptRequest && (
-                <Grid container item xs={2}>
-                  <Button
-                    onClick={() => handleAcceptRequest(user._id)}
-                    className={classes.acceptButton}
+              {showAcceptButton &&
+                !!handleAcceptRequest &&
+                !!handleRejectRequest && (
+                  <Grid
+                    container
+                    item
+                    xs={4}
+                    direction='row'
+                    className={classes.actions}
                   >
-                    Accept
-                  </Button>
-                </Grid>
-              )}
+                    <Grid container item xs={8}>
+                      <Button
+                        onClick={() => handleAcceptRequest(user._id)}
+                        className={classes.acceptButton}
+                      >
+                        Accept
+                      </Button>
+                    </Grid>
+                    <Grid container item xs={4}>
+                      <IconButton onClick={() => handleRejectRequest(user._id)}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                )}
             </Grid>
           )
         )}

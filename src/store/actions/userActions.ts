@@ -64,6 +64,7 @@ export interface updateUserProps {
 export interface addFollowerObj {
   userId: string
   follow: boolean
+  removeRequest?: boolean
 }
 
 export interface userFeedUsers {
@@ -256,9 +257,12 @@ export const requestFollow = (payload: addFollowerObj) => async (
   try {
     const follow = get(payload, 'follow', true)
     const userId = get(payload, 'userId', '')
+    const removeRequest = get(payload, 'removeRequest')
     const myId = getState().user.user._id
     const response = await apiClient().put(
-      `/user/${follow ? 'request' : 'removerequest'}/${userId}`
+      `/user/${
+        follow ? 'request' : removeRequest ? 'removerequest' : 'cancelrequest'
+      }/${userId}`
     )
     const { data } = response.data
     if (get(getState(), 'user.getUser._id') === userId) {

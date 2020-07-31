@@ -134,11 +134,17 @@ const addRequesting = asyncHandler(async (req, res, next) => {
 const removeRequested = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
+
+  let reqArr = 'requested'
+  if (req.url.toLowerCase().includes('removerequest')) {
+    reqArr = 'requesting'
+  }
+
   await User.findByIdAndUpdate(
     otherId,
     {
       $pull: {
-        requested: ownId,
+        [reqArr]: ownId,
       },
     },
     {
@@ -151,11 +157,17 @@ const removeRequested = asyncHandler(async (req, res, next) => {
 const removeRequesting = asyncHandler(async (req, res, next) => {
   const otherId = req.params.id
   const ownId = req.user.id
+
+  let reqArr = 'requesting'
+  if (req.url.toLowerCase().includes('removerequest')) {
+    reqArr = 'requested'
+  }
+
   const updatedUser = await User.findByIdAndUpdate(
     ownId,
     {
       $pull: {
-        requesting: otherId,
+        [reqArr]: otherId,
       },
     },
     {

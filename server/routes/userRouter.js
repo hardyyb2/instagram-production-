@@ -28,6 +28,7 @@ router
 router.route('/feed').get(getUserDetails, getUserFeed)
 
 router.route('/request/:id').put(addRequested, addRequesting)
+router.route('/cancelrequest/:id').put(removeRequested, removeRequesting)
 router.route('/removerequest/:id').put(removeRequested, removeRequesting)
 
 router.route('/follow/:id').put(addFollowing, addFollower)

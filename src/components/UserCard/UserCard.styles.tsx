@@ -14,6 +14,7 @@ export default makeStyles((theme: Theme) => ({
     borderRadius: '12px',
     maxHeight: '80px',
     margin: '10px 15px',
+    position: 'relative',
     boxShadow: `0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23)`,
   },
   username: {
@@ -31,5 +32,9 @@ export default makeStyles((theme: Theme) => ({
     color: theme.palette.primary.main,
     textTransform: 'capitalize',
     fontWeight: 'bolder',
+  },
+  actions: {
+    position: 'absolute',
+    right: '10px',
   },
 }))
