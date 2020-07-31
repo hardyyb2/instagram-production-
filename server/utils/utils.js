@@ -22,19 +22,6 @@ const generateToken = (id) =>
     expiresIn: '24h',
   })
 
-let storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    if (file.mimetype.startsWith(`image/`)) {
-      cb(null, './public/images/')
-    } else {
-      cb({ message: 'this file is neither a video or image file' }, false)
-    }
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  },
-})
-
 const avatarUploadOptions = {
   storage: multer.memoryStorage(),
   limits: {

@@ -1,6 +1,6 @@
 import React, { useRef, useLayoutEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { IconButton, makeStyles, Button } from '@material-ui/core'
+import { IconButton, makeStyles } from '@material-ui/core'
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import ChatBubbleOutlineOutlinedIcon from '@material-ui/icons/ChatBubbleOutlineOutlined'
