@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect, Link, useHistory } from 'react-router-dom'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import { Formik, Form, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
@@ -21,7 +21,7 @@ interface SignupProps {
   loading: boolean
   error: string | null
   isAuthenticated: boolean | null
-  signupUserConnect: (user: MyFormValues) => void
+  signupUserConnect: (user: MyFormValues) => any
   clearErrorConnect: () => void
 }
 
@@ -47,6 +47,7 @@ const Signup: React.FC<SignupProps> = ({
   clearErrorConnect,
 }) => {
   const classes = useStyles()
+  const history = useHistory()
   const initialValues: MyFormValues = { email: '', password: '', username: '' }
 
   const toggleModal = () => clearErrorConnect()
@@ -58,6 +59,12 @@ const Signup: React.FC<SignupProps> = ({
     setErrors({})
     clearErrorConnect()
     signupUserConnect(values)
+      .then((res: any) => {
+        if (res.success) history.replace('/login')
+      })
+      .catch((err: any) => {
+        console.log(err)
+      })
   }
 
   if (isAuthenticated) {

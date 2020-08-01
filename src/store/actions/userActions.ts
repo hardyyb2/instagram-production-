@@ -5,9 +5,13 @@ import apiClient from '../../apiInstance'
 import * as constants from '../constants'
 import { objectToFormData } from '../../utils/helpers'
 import { IState } from '../types'
+import { logoutUser } from './authActions'
 
 export interface UserProps {
-  avatar: string
+  avatar: {
+    url: string
+    id: string
+  }
   account_created: string
   following: (userFeedUsers | string)[]
   followers: (userFeedUsers | string)[]
@@ -68,7 +72,10 @@ export interface addFollowerObj {
 }
 
 export interface userFeedUsers {
-  avatar: string
+  avatar: {
+    url: string
+    id: string
+  }
   _id: string
   username: string
 }
@@ -218,12 +225,15 @@ export const deleteUser = () => async (
 ) => {
   dispatch(requestUser())
   try {
+    await apiClient().delete('/post/deleteallposts')
     const response = await apiClient().delete(`/user`)
     const { data } = response.data
+    dispatch(logoutUser())
     dispatch(deletedUser())
     localStorage.removeItem('token')
     return data
   } catch (err) {
+    console.log(err)
     if (err.response === undefined)
       dispatch(getUserError('Something went wrong'))
     dispatch(getUserError(err.response.data.error))
@@ -237,6 +247,7 @@ export const updateUser = (user: updateUserObjProps): any => async (
   try {
     const response = await apiClient().put(`/user`, objectToFormData(user))
     const { data } = response.data
+    console.log(data)
     dispatch(updatedUser(data))
     dispatch(setUserById(data))
     return new Promise((resolve, reject) => {

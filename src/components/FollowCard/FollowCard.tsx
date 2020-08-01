@@ -67,7 +67,7 @@ const FollowCard: React.FC<IProps> = ({ userFeed, user }) => {
                     className={classes.image}
                     onClick={() => handleProfileRedirect(userF)}
                   >
-                    <HeaderImage src={userF.avatar} alt={userF.username} />
+                    <HeaderImage src={userF.avatar.url} alt={userF.username} />
                   </HeaderImageContainer>
                   <Grid
                     item

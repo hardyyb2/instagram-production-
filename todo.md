@@ -3,7 +3,7 @@
 ## Backend
 
 - Separate route for avatar change
-- Requested feature
+- Requested feature (done)
 - Stories
 - Messages
 - No Add Comment from non-followers
@@ -15,6 +15,7 @@
 
 ## FrontEnd
 
+- reload on addpost and add avatar
 - Lazyload
 - Infinite loading
 - Remove Toast

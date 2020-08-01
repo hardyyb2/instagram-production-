@@ -1,6 +1,7 @@
 const jimp = require('jimp')
 const multer = require('multer')
 const fs = require('fs')
+const cloudinary = require('cloudinary')
 
 const asyncHandler = require('../middlewares/AsyncHandler')
 const ErrorResponse = require('../utils/errorResponse')
@@ -56,12 +57,21 @@ const getAllUsers = asyncHandler(async (req, res, next) => {
 })
 
 const deleteUser = asyncHandler(async (req, res, next) => {
-  await User.findByIdAndDelete(req.user.id).exec((err, user) => {
-    if (err) return next(new ErrorResponse('Unable to delete', 500))
-    if (!user) return next(new ErrorResponse('No user found', 400))
+  await cloudinary.v2.api.delete_resources(
+    [req.user.avatar.id],
+    async (error, result) => {
+      if (error) {
+        return send(res, 400, error)
+      } else {
+        await User.findByIdAndDelete(req.user.id).exec((err, user) => {
+          if (err) return next(new ErrorResponse('Unable to delete', 500))
+          if (!user) return next(new ErrorResponse('No user found', 400))
 
-    send(res, 200, user)
-  })
+          send(res, 200, user)
+        })
+      }
+    }
+  )
 })
 
 const uploadAvatar = multer(avatarUploadOptions).single('avatar')
@@ -82,7 +92,10 @@ const resizeAvatar = asyncHandler(async (req, res, next) => {
 const updateUser = asyncHandler(async (req, res, next) => {
   if (req.file && !!get(req, 'file.originalname')) {
     const response = await uploads(`./public/${req.body.avatar}`)
-    req.body.avatar = response.url
+    req.body.avatar = {
+      url: response.url,
+      id: response.id,
+    }
     fs.rmdirSync('./public/uploads', { recursive: true })
   }
 

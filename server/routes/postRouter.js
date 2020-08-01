@@ -10,6 +10,7 @@ const {
   toggleComment,
   deletePost,
   getPostFeed,
+  deleteAllPostsByUserId,
 } = require('../controllers/postController')
 
 router.route('/feed').get(getUserDetails, getPostFeed)
@@ -19,6 +20,7 @@ router.route('/comment/:postId').put(toggleComment)
 router.route('/removeComment/:postId').put(toggleComment)
 router.route('/delete/:postId').delete(deletePost)
 router.route('/get/:postId').get(getPostById)
+router.route('/deleteallposts').delete(getUserDetails, deleteAllPostsByUserId)
 router.route('/:id').get(getUserDetails, getPostsByUserId)
 router.route('/').post(getUserDetails, uploadPost, resizePost, addPost)
 

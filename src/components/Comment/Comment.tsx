@@ -30,7 +30,7 @@ const Comment: React.FC<IProps> = ({ comment, userId, deleteComment }) => {
       >
         <Grid container item xs={3} className={classes.imageContainer}>
           <img
-            src={comment.postedBy.avatar}
+            src={comment.postedBy.avatar.url}
             alt={comment.postedBy.username}
             className={classes.image}
           />

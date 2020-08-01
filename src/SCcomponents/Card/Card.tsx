@@ -89,7 +89,7 @@ const Card: React.FC<IProps> = ({
           <CardHeader container item justify='flex-start' direction='row'>
             <HeaderImageContainer>
               {userImage ? (
-                <HeaderImage src={userImage} alt={userName} />
+                <HeaderImage src={userImage.url} alt={userName} />
               ) : (
                 <AccountCircleIcon />
               )}
@@ -101,7 +101,7 @@ const Card: React.FC<IProps> = ({
           </CardHeader>
           <CardImageContainer pd={'12px'} onDoubleClick={_handleDoubleClick}>
             <CardImageWrapper>
-              <CardImage src={postImage} alt={postCaption} />
+              <CardImage src={postImage.url} alt={postCaption} />
             </CardImageWrapper>
           </CardImageContainer>
           <CardFooter container direction='row' justify='flex-start'>
