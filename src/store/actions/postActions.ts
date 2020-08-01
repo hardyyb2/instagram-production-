@@ -25,7 +25,10 @@ export interface postProps {
   _id: string
   comments: commentProps[]
   caption: string
-  image: string
+  image: {
+    url: string
+    id: string
+  }
   postedBy: UserProps
   createdAt: string
   __v: number | string

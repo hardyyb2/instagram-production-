@@ -20,6 +20,7 @@ import {
   toggleSnackBar,
   userFeedUsers,
   logoutUser,
+  deleteUser,
 } from '../../store/actions'
 import { IState } from '../../store/types'
 import {
@@ -44,6 +45,7 @@ interface IProps {
   getUserByIdConnect: (userId: string) => void
   toggleSnackBarConnect: (message: string) => void
   logoutUserConnect: () => void
+  deleteUserConnect: () => void
 }
 
 interface UsersProps {
@@ -63,6 +65,7 @@ const Profile: React.FC<IProps> = ({
   getUserByIdConnect,
   toggleSnackBarConnect,
   logoutUserConnect,
+  deleteUserConnect,
 }) => {
   const classes = useStyles()
   const location = useLocation()
@@ -153,6 +156,12 @@ const Profile: React.FC<IProps> = ({
       color: 'red',
       handleClick: handleLogout,
     },
+    {
+      title: 'Delete Account',
+      icon: 'delete',
+      color: 'red',
+      handleClick: deleteUserConnect,
+    },
   ]
 
   if (!postloading) {
@@ -208,7 +217,7 @@ const Profile: React.FC<IProps> = ({
             <Grid item className={classes.imageContainer}>
               {selectedUser ? (
                 <img
-                  src={selectedUser.avatar}
+                  src={selectedUser.avatar.url}
                   alt='profile'
                   className={classes.image}
                 />
@@ -370,7 +379,7 @@ const Profile: React.FC<IProps> = ({
                     onClick={() => handlePostCardClick(post)}
                   >
                     <img
-                      src={post.image}
+                      src={post.image.url}
                       alt='post'
                       className={classes.postImage}
                     />
@@ -447,6 +456,7 @@ const mapDispatchToProps = (dispatch: Dispatch<PostActions, {}, any>) => {
     toggleSnackBarConnect: (message: string) =>
       dispatch(toggleSnackBar(message)),
     logoutUserConnect: () => dispatch(logoutUser()),
+    deleteUserConnect: () => dispatch(deleteUser()),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)

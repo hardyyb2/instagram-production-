@@ -153,7 +153,11 @@ export const signupUser = (user: SignupUserProps) => async (
     const response = await apiClient().post('/auth/signup', user)
     const sucess = get(response, 'success', {})
     if (sucess) dispatch(receiveSignup())
+    return new Promise((resolve, reject) => {
+      resolve({ success: true })
+    })
   } catch (err) {
+    console.log(err)
     if (err.response === undefined) {
       dispatch(signupError('Something went wrong'))
     } else dispatch(signupError(err.response.data.error))

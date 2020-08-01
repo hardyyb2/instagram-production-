@@ -18,7 +18,7 @@ const LikedContainer: React.FC<IProps> = ({ avatars, likeNumber }) => {
             <Avatar
               key={avatar._id}
               alt={avatar.username}
-              src={avatar.avatar}
+              src={avatar.avatar.url}
               className={
                 index === 0
                   ? `${classes.avatar}`

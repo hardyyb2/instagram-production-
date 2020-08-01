@@ -49,7 +49,7 @@ const UserCard: React.FC<IProps> = ({
                 size={'40px'}
                 onClick={() => handleUserClick(user)}
               >
-                <HeaderImage src={user.avatar} alt={user.username} />
+                <HeaderImage src={user.avatar.url} alt={user.username} />
               </HeaderImageContainer>
               <Grid
                 container

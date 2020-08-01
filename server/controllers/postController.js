@@ -1,6 +1,8 @@
 const jimp = require('jimp')
 const multer = require('multer')
 const fs = require('fs')
+const cloudinary = require('cloudinary')
+const _ = require('lodash')
 
 const asyncHandler = require('../middlewares/AsyncHandler')
 const { send, avatarUploadOptions } = require('../utils/utils')
@@ -29,8 +31,13 @@ const resizePost = asyncHandler(async (req, res, next) => {
 const addPost = asyncHandler(async (req, res, next) => {
   req.body.postedBy = req.user.id
   const response = await uploads(`./public/${req.body.image}`)
-  req.body.image = response.url
+  req.body.image = {
+    url: response.url,
+    id: response.id,
+  }
+
   fs.rmdirSync('./public/uploads', { recursive: true })
+
   const post = new Post(req.body)
   const postData = await post.save()
 
@@ -111,6 +118,21 @@ const deletePost = asyncHandler(async (req, res, next) => {
   send(res, 201, post)
 })
 
+const deleteAllPostsByUserId = asyncHandler(async (req, res, next) => {
+  const posts = await Post.find({ postedBy: req.user.id })
+  const cloudinaryIds = _.map(posts, 'image.id')
+  let deletedPosts
+  cloudinary.v2.api.delete_resources(cloudinaryIds, async (error, result) => {
+    if (error) {
+      return send(res, 400, error)
+    } else {
+      deletedPosts = await Post.deleteMany({ postedBy: req.user.id })
+    }
+  })
+
+  send(res, 201, deletedPosts)
+})
+
 const getPostFeed = asyncHandler(async (req, res, next) => {
   const { following } = req.profile
   following.push(req.user.id)
@@ -130,4 +152,5 @@ module.exports = {
   toggleComment,
   deletePost,
   getPostFeed,
+  deleteAllPostsByUserId,
 }

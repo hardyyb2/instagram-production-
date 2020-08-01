@@ -27,9 +27,15 @@ const userSchema = new mongoose.Schema(
       maxlength: [40, 'username max length should be 40'],
     },
     avatar: {
-      type: String,
-      required: [true, 'Avatar image is required'],
-      default: '/exo.jpg',
+      url: {
+        type: String,
+        required: [true, 'Avatar image is required'],
+        default: '/exo.jpg',
+      },
+      id: {
+        type: String,
+        default: '/exo.jpg',
+      },
     },
     about: {
       type: String,

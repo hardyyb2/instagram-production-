@@ -7,7 +7,7 @@ const Post = new mongoose.Schema(
       type: String,
       required: [true, 'Caption cannot be empty'],
     },
-    image: { type: String },
+    image: { url: String, id: String },
     postedBy: { type: ObjectId, ref: 'User' },
     createdAt: {
       type: Date,

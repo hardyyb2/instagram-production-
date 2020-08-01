@@ -140,7 +140,7 @@ const Home: React.FC<IProps> = ({
                   </Grid>
                   <Grid container item xs={12} className={classes.profileImage}>
                     <SCProfileImage
-                      image={image ? image : avatar}
+                      image={image ? image : avatar.url}
                       handleImageUpload={(
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
