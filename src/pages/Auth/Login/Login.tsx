@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import clsx from 'clsx'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect, Link, useHistory } from 'react-router-dom'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import { Formik, Form, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
@@ -53,6 +53,7 @@ const Login: React.FC<LoginProps> = ({
   clearErrorConnect,
 }) => {
   const classes = useStyles()
+  const history = useHistory()
 
   const initialValues: MyFormValues = {
     email: '',
@@ -70,6 +71,8 @@ const Login: React.FC<LoginProps> = ({
     clearErrorConnect()
     loginUserConnect(values)
   }
+
+  const handleForgotPassword = () => history.push('/forgotpassword')
 
   if (isAuthenticated) {
     return <Redirect to='/home' />
@@ -122,28 +125,36 @@ const Login: React.FC<LoginProps> = ({
                     {errors.password && touched.password && (
                       <Toast myMsg={errors.password} />
                     )}
-                    <FormControlLabel
-                      className={classes.checkBoxLabel}
-                      control={
-                        <Checkbox
-                          checked={values.rememberMe}
-                          onChange={handleChange}
-                          name='rememberMe'
-                          color='primary'
-                          className={classes.checkBox}
-                          checkedIcon={
-                            <span
-                              className={clsx(
-                                classes.icon,
-                                classes.checkedIcon
-                              )}
-                            />
-                          }
-                          icon={<span className={classes.icon} />}
-                        />
-                      }
-                      label='Remeber Me'
-                    />
+                    <Grid container item>
+                      <FormControlLabel
+                        className={classes.checkBoxLabel}
+                        control={
+                          <Checkbox
+                            checked={values.rememberMe}
+                            onChange={handleChange}
+                            name='rememberMe'
+                            color='primary'
+                            className={classes.checkBox}
+                            checkedIcon={
+                              <span
+                                className={clsx(
+                                  classes.icon,
+                                  classes.checkedIcon
+                                )}
+                              />
+                            }
+                            icon={<span className={classes.icon} />}
+                          />
+                        }
+                        label='Remeber Me'
+                      />
+                      <span
+                        onClick={handleForgotPassword}
+                        className={classes.forgotPassword}
+                      >
+                        Forgot Password??
+                      </span>
+                    </Grid>
                     <Button
                       type='submit'
                       disabled={loading || !!errors.email || !!errors.password}

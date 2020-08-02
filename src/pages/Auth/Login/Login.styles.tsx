@@ -67,4 +67,11 @@ export default makeStyles((theme: Theme) => ({
       backgroundColor: '#106ba3',
     },
   },
+  forgotPassword: {
+    color: 'white',
+    marginLeft: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+    paddingBottom: '5px',
+  },
 }))

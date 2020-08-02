@@ -43,7 +43,7 @@ const signUp = asyncHandler(async (req, res, next) => {
 
 const forgotPassword = asyncHandler(async (req, res, next) => {
   if (req.body.email === '') {
-    send(res, 400, 'Email Required')
+    return next(new ErrorResponse('Email Required', 400))
   }
 
   const user = await User.findOne({
@@ -51,17 +51,13 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   })
 
   if (user === null) {
-    console.log('here')
-    send(res, 400, 'Email not registered on Exogram.')
+    return next(new ErrorResponse('Email not registered on Exogram.', 400))
   } else {
     const token = crypto.randomBytes(20).toString('hex')
     await user.updateOne({
       resetPasswordToken: token,
       resetPasswordExpires: Date.now() + 3600000,
     })
-
-    console.log(`${process.env.EMAIL_ADDRESS}`, `${process.env.EMAIL_PASSWORD}`)
-
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -86,7 +82,7 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
     transporter.sendMail(mailOptions, (err, response) => {
       if (err) {
-        send(res, 500, { error: 'Something went Wrong' + err })
+        return next(new ErrorResponse('Something went wrong', 500))
       } else {
         send(res, 200, 'Email sent')
       }
@@ -94,35 +90,18 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   }
 })
 
-const resetPassword = asyncHandler(async (req, res, next) => {
-  const user = await User.findOne({
-    where: {
-      resetPasswordToken: req.query.resetPasswordToken,
-      resetPasswordExpires: { $gt: Date.now() },
-    },
-  })
-  if (user == null) {
-    send(res, 403, 'Password reset link is invalid or has expired')
-  } else {
-    send(res, 300, {
-      username: user.username,
-      message: 'password reset link ok',
-    })
-  }
-})
-
 const updatePassword = asyncHandler(async (req, res, next) => {
   const user = User.findOne({
-    where: {
-      username: req.body.username,
-      resetPasswordToken: req.body.resetPasswordToken,
-      resetPasswordExpires: {
-        $gt: Date.now(),
-      },
+    username: req.body.username,
+    resetPasswordToken: req.body.resetPasswordToken,
+    resetPasswordExpires: {
+      $gt: Date.now(),
     },
   })
   if (user === null) {
-    send(res, 403, 'password reset link is invalid or has expired')
+    return next(
+      new ErrorResponse('Password reset link is invalid or has expired', 403)
+    )
   } else if (user != null) {
     console.log('user exists in db')
     bcrypt
@@ -138,7 +117,7 @@ const updatePassword = asyncHandler(async (req, res, next) => {
         send(res, 200, 'Password updated')
       })
   } else {
-    send(res, 401, `No user found`)
+    return next(new ErrorResponse('No User found.', 400))
   }
 })
 
@@ -146,6 +125,5 @@ module.exports = {
   signUp,
   login,
   forgotPassword,
-  resetPassword,
   updatePassword,
 }

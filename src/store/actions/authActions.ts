@@ -197,6 +197,24 @@ export const setAuthenticated = (token: string | null) => async (
   dispatch(requestVerify())
   dispatch(verifySuccess(token))
 }
+
+export const forgotPassword = (email: string) => async (
+  dispatch: Dispatch<AuthenticateAction, {}, any>
+) => {
+  try {
+    const response = await apiClient().post('/auth/forgotpassword', {
+      email,
+    })
+    return new Promise((resolve, reject) => {
+      resolve({ success: true, message: response })
+    })
+  } catch (err) {
+    if (err.response === undefined) {
+      dispatch(signupError('Something went wrong'))
+    } else dispatch(loginError(err.response.data.error))
+  }
+}
+
 export type AuthenticateAction =
   | IAuthenticate
   | IUnauthenticate

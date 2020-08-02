@@ -25,6 +25,9 @@ const Post = lazy(() => import('./pages/Post/Post'))
 const AddPost = lazy(() => import('./pages/AddPost/AddPost'))
 const Explore = lazy(() => import('./pages/Explore/Explore'))
 const Activity = lazy(() => import('./pages/Activity/Activity'))
+const ForgotPassword = lazy(() =>
+  import('./pages/ResetPassword/ForgotPassword/ForgotPassword')
+)
 
 export const LoadingScreen: React.FC<{}> = () => (
   <Grid container justify='center' className={`LoadingScreen`}>
@@ -119,6 +122,11 @@ const App: React.FC<IProps> = ({
 
           <PublicRoute path='/login' exact={true} component={Login} />
           <PublicRoute path='/signup' exact={true} component={Signup} />
+          <PublicRoute
+            path='/forgotpassword'
+            exact={true}
+            component={ForgotPassword}
+          />
           <PublicRoute path='/' exact component={Login} />
         </Suspense>
       </Switch>
