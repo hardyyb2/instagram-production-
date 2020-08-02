@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt')
 const ErrorResponse = require('../utils/errorResponse')
 
 const asyncHandler = require('../middlewares/AsyncHandler')
@@ -15,7 +14,9 @@ const login = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse('user name or password incorrect', 401))
 
       if (isMatch) {
-        let token = generateToken(user.id)
+        let token = req.body.rememberMe
+          ? generateToken(user.id, '15d')
+          : generateToken(user.id, '24h')
         return send(res, 200, token)
       } else {
         return next(new ErrorResponse('user name or password incorrect', 401))

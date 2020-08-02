@@ -17,9 +17,9 @@ const getDuplicate = (err) => {
   return str
 }
 
-const generateToken = (id) =>
+const generateToken = (id, time) =>
   jwt.sign({ id }, process.env.SECRET, {
-    expiresIn: '24h',
+    expiresIn: time,
   })
 
 const avatarUploadOptions = {

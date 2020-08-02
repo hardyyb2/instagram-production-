@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
+import clsx from 'clsx'
 import { Redirect, Link } from 'react-router-dom'
 import { ThunkDispatch as Dispatch } from 'redux-thunk'
 import { Formik, Form, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
-import { makeStyles, Grid, Box, Button } from '@material-ui/core'
+import {
+  Grid,
+  Box,
+  Button,
+  FormControlLabel,
+  Checkbox,
+} from '@material-ui/core'
 
 import {
   loginUser,
@@ -28,6 +35,7 @@ interface LoginProps {
 interface MyFormValues {
   email: string
   password: string
+  rememberMe: boolean
 }
 
 const loginSchema = Yup.object().shape({
@@ -46,7 +54,11 @@ const Login: React.FC<LoginProps> = ({
 }) => {
   const classes = useStyles()
 
-  const initialValues: MyFormValues = { email: '', password: '' }
+  const initialValues: MyFormValues = {
+    email: '',
+    password: '',
+    rememberMe: false,
+  }
 
   const toggleModal = () => clearErrorConnect()
 
@@ -110,6 +122,28 @@ const Login: React.FC<LoginProps> = ({
                     {errors.password && touched.password && (
                       <Toast myMsg={errors.password} />
                     )}
+                    <FormControlLabel
+                      className={classes.checkBoxLabel}
+                      control={
+                        <Checkbox
+                          checked={values.rememberMe}
+                          onChange={handleChange}
+                          name='rememberMe'
+                          color='primary'
+                          className={classes.checkBox}
+                          checkedIcon={
+                            <span
+                              className={clsx(
+                                classes.icon,
+                                classes.checkedIcon
+                              )}
+                            />
+                          }
+                          icon={<span className={classes.icon} />}
+                        />
+                      }
+                      label='Remeber Me'
+                    />
                     <Button
                       type='submit'
                       disabled={loading || !!errors.email || !!errors.password}

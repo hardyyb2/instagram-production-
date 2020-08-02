@@ -2,7 +2,7 @@
 
 ## Backend
 
-- Separate route for avatar change
+- Separate route for avatar change (no need problem solved)
 - Requested feature (done)
 - Stories
 - Messages
@@ -11,7 +11,7 @@
 - Secure Post Deletion
 - Refresh JWT
 - reduce follow and requested to one function
-- remove posts and avatars of deleted users
+- remove posts and avatars of deleted users (done)
 
 ## FrontEnd
 
@@ -25,6 +25,7 @@
 - Replace only likes or comments and not whole post.
 - Add card sketeon in explore and svg for no users
 - Add invite when no user
+- add remember me.
 
 ## bugs
 
