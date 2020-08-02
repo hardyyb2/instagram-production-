@@ -11,6 +11,6 @@ router.route(`/signup`).post(signUp)
 router.route(`/login`).post(login)
 router.route(`/forgotpassword`).post(forgotPassword)
 router.route(`/resetpassword`).get(resetPassword)
-router.route(`/updatepassword`).get(updatePassword)
+router.route(`/updatepassword`).put(updatePassword)
 
 module.exports = router

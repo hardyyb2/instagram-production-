@@ -41,25 +41,26 @@ const signUp = asyncHandler(async (req, res, next) => {
   send(res, 201, userData)
 })
 
-const forgotpassword = asyncHandler(async (req, res, next) => {
+const forgotPassword = asyncHandler(async (req, res, next) => {
   if (req.body.email === '') {
     send(res, 400, 'Email Required')
   }
 
   const user = await User.findOne({
-    where: {
-      email: req.body.email,
-    },
+    email: req.body.email,
   })
 
   if (user === null) {
+    console.log('here')
     send(res, 400, 'Email not registered on Exogram.')
   } else {
     const token = crypto.randomBytes(20).toString('hex')
-    await user.update({
+    await user.updateOne({
       resetPasswordToken: token,
       resetPasswordExpires: Date.now() + 3600000,
     })
+
+    console.log(`${process.env.EMAIL_ADDRESS}`, `${process.env.EMAIL_PASSWORD}`)
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -75,17 +76,17 @@ const forgotpassword = asyncHandler(async (req, res, next) => {
       subject: 'Exogram (Link To Reset Password)',
       text:
         'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-          'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n' +
-          process.env.NODE_ENV ===
-        'development'
-          ? `http://localhost:3000/reset/${token}\n\n`
-          : `http://exogram.herokuapp.com/reset/${token}\n\n` +
-            'If you did not request this, please ignore this email and your password will remain unchanged.\n',
+        'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n' +
+        //   process.env.NODE_ENV ===
+        // 'development'
+        `http://localhost:3000/reset/${token}\n\n` +
+        // : `http://exogram.herokuapp.com/reset/${token}\n\n`
+        'If you did not request this, please ignore this email and your password will remain unchanged.\n',
     }
 
     transporter.sendMail(mailOptions, (err, response) => {
       if (err) {
-        send(res, 500, 'Something went Wrong')
+        send(res, 500, { error: 'Something went Wrong' + err })
       } else {
         send(res, 200, 'Email sent')
       }
@@ -144,7 +145,7 @@ const updatePassword = asyncHandler(async (req, res, next) => {
 module.exports = {
   signUp,
   login,
-  forgotpassword,
+  forgotPassword,
   resetPassword,
   updatePassword,
 }
