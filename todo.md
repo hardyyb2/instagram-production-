@@ -12,6 +12,7 @@
 - Refresh JWT
 - reduce follow and requested to one function
 - remove posts and avatars of deleted users (done)
+- reset token
 
 ## FrontEnd
 
@@ -25,8 +26,8 @@
 - Replace only likes or comments and not whole post.
 - Add card sketeon in explore and svg for no users
 - Add invite when no user
-- add remember me.
+- add remember me.(done)
 
 ## bugs
 
-- complete reload on avatar change.
+- complete reload on avatar change.(solved // reloads only in dev due to change in public directory)

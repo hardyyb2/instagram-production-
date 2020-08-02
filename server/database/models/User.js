@@ -49,6 +49,8 @@ const userSchema = new mongoose.Schema(
     followers: [{ type: ObjectId, ref: 'User' }],
     requesting: [{ type: ObjectId, ref: 'User' }],
     requested: [{ type: ObjectId, ref: 'User' }],
+    resetPasswordToken: { type: String, default: '' },
+    resetPasswordExpires: { type: Date, default: Date.now() },
   },
   {
     timestamps: true,
